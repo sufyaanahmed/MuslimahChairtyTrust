@@ -1,0 +1,107 @@
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useData } from '../context/DataContext'
+import MediaGrid from '../components/MediaGrid'
+
+const Gallery = () => {
+  const { media, mediaLoading } = useData()
+  const [visibleMedia, setVisibleMedia] = useState([])
+  const [page, setPage] = useState(1)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const observerRef = useRef(null)
+  const itemsPerPage = 12 // Load 12 items at a time
+
+  // Initialize with first page
+  useEffect(() => {
+    if (media.length > 0) {
+      setVisibleMedia(media.slice(0, itemsPerPage))
+      setPage(1)
+    }
+  }, [media])
+
+  // Load more items when scrolling
+  const loadMore = useCallback(() => {
+    if (isLoadingMore || visibleMedia.length >= media.length) return
+
+    setIsLoadingMore(true)
+    setTimeout(() => {
+      const nextPage = page + 1
+      const startIndex = 0
+      const endIndex = nextPage * itemsPerPage
+      setVisibleMedia(media.slice(startIndex, endIndex))
+      setPage(nextPage)
+      setIsLoadingMore(false)
+    }, 300) // Small delay for smooth loading
+  }, [page, media, visibleMedia.length, isLoadingMore, itemsPerPage])
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const currentObserver = observerRef.current
+    if (currentObserver) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !isLoadingMore && visibleMedia.length < media.length) {
+            loadMore()
+          }
+        },
+        { threshold: 0.1 }
+      )
+
+      observer.observe(currentObserver)
+
+      return () => {
+        if (currentObserver) {
+          observer.unobserve(currentObserver)
+        }
+      }
+    }
+  }, [loadMore, isLoadingMore, visibleMedia.length, media.length])
+
+  return (
+    <div className="py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-4 text-gray-900">
+          Gallery
+        </h1>
+        <p className="text-center text-gray-600 mb-12">
+          Moments of impact and hope from our work
+        </p>
+
+        {mediaLoading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600">Loading gallery...</p>
+          </div>
+        ) : visibleMedia.length > 0 ? (
+          <>
+            <MediaGrid media={visibleMedia} />
+            {/* Loading trigger element */}
+            {visibleMedia.length < media.length && (
+              <div ref={observerRef} className="mt-8 text-center py-8">
+                {isLoadingMore ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <span className="ml-3 text-gray-600">Loading more...</span>
+                  </div>
+                ) : (
+                  <p className="text-gray-500">Scroll for more</p>
+                )}
+              </div>
+            )}
+            {visibleMedia.length >= media.length && media.length > 0 && (
+              <div className="mt-8 text-center py-4">
+                <p className="text-gray-500">All media loaded ({media.length} items)</p>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-600">No media available at the moment.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Gallery
+
+
