@@ -7,6 +7,19 @@ const CaseCard = ({ caseData, onDonate }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      {/* Optional Image */}
+      {caseData.url && (
+        <div className="w-full h-48 overflow-hidden">
+          <img
+            src={caseData.url}
+            alt={caseData.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none'
+            }}
+          />
+        </div>
+      )}
       <div className="p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-2">
           {caseData.title}

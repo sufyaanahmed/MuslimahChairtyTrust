@@ -1,15 +1,45 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import CaseCard from '../components/CaseCard'
 import MediaGrid from '../components/MediaGrid'
+import NumberFlowComponent from '../components/ui/NumberFlow'
+import { fetchStats } from '../api/api'
+import { QuranHero } from '../components/ui/QuranHero'
 
 const Home = () => {
   const { cases, media, loading } = useData()
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [stats, setStats] = useState({
+    total_donors: 0,
+    total_cases: 0,
+    our_volunteers: 0
+  })
+  const [statsLoading, setStatsLoading] = useState(true)
 
   // Get featured items (first 3)
   const featuredCases = useMemo(() => cases.slice(0, 3), [cases])
   const featuredMedia = useMemo(() => media.slice(0, 3), [media])
+
+  useEffect(() => {
+    // Trigger animation after component mounts
+    setIsLoaded(true)
+    
+    // Fetch stats from Google Sheets
+    const loadStats = async () => {
+      try {
+        setStatsLoading(true)
+        const statsData = await fetchStats(true)
+        setStats(statsData)
+      } catch (error) {
+        console.error('Error loading stats:', error)
+      } finally {
+        setStatsLoading(false)
+      }
+    }
+    
+    loadStats()
+  }, [])
 
   const handleDonate = (caseData) => {
     window.location.href = `/cases#case-${caseData.case_id}`
@@ -19,7 +49,9 @@ const Home = () => {
     <div>
       {/* Hero Section */}
       <section 
-        className="relative text-white py-20 px-4 bg-cover bg-center bg-no-repeat"
+        className={`relative text-white py-20 px-4 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
         style={{
           backgroundImage: 'url(/hero_image2.jpg)',
           minHeight: '500px',
@@ -28,7 +60,9 @@ const Home = () => {
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 delay-300 ${
+          isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+        }`}>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
             Muslimah Charity Trust
           </h1>
@@ -41,6 +75,22 @@ const Home = () => {
           >
             Donate Now
           </Link>
+        </div>
+
+        {/* Inverted Triangle Divider - Transparent triangle showing image, white below */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none">
+          <svg
+            className="relative block w-full h-20"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+          >
+            {/* White fill only below the triangle - triangle area is transparent */}
+            <path
+              d="M0,120 L1200,120 L1200,0 L600,60 L0,0Z"
+              fill="white"
+            />
+          </svg>
         </div>
       </section>
 
@@ -70,15 +120,15 @@ const Home = () => {
               a step toward building a stronger, more caring community for all.
       </p>
 
-      <p className="text-center text-lg font-semibold text-primary mt-6">
-        Our Current Impact
-      </p>
-
-      <div className="text-center text-lg leading-relaxed space-y-3 text-gray-800">
-        <p> <strong>Food Kits Distribution:</strong> Around 200 food kits distributed daily to families in need</p>
-        <p> <strong>Blanket Drives:</strong> Regular blanket distribution to individuals on the streets and in hospitals</p>
-        <p> <strong>Friday Distribution:</strong> Weekly distribution of food, fresh fruits, and ration kits every Friday</p>
-        <p> <strong>Community Support:</strong> Ongoing support for vulnerable families and individuals</p>
+      {/* Quran Verse Section */}
+      <div className="mt-12">
+        <QuranHero
+          arabicText="إِنَّ ٱلْمُصَّدِّقِينَ وَٱلْمُصَّدِّقَـٰتِ وَأَقْرَضُوا۟ ٱللَّهَ قَرْضًا حَسَنًۭا يُضَـٰعَفُ لَهُمْ وَلَهُمْ أَجْرٌۭ كَرِيمٌۭ ١٨"
+          englishText="Indeed, the men who practice charity and the women who practice charity and [they who] have loaned Allāh a goodly loan – it will be multiplied for them, and they will have a noble reward."
+          verseReference="Quran 57:18"
+          gradient={true}
+          blur={true}
+        />
       </div>
     </div>
   </div>
@@ -88,21 +138,47 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-16 px-4 bg-green-50">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">5,513</div>
-              <div className="text-gray-700 font-medium">Total Donated Donors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">13</div>
-              <div className="text-gray-700 font-medium">Total Cases</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">1,308</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                {statsLoading ? (
+                  <span className="text-gray-400">...</span>
+                ) : (
+                  <NumberFlowComponent 
+                    value={stats.total_donors} 
+                    trend={false}
+                    className="text-primary"
+                  />
+                )}
+              </div>
               <div className="text-gray-700 font-medium">Total Donors</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">203</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                {statsLoading ? (
+                  <span className="text-gray-400">...</span>
+                ) : (
+                  <NumberFlowComponent 
+                    value={stats.total_cases} 
+                    trend={false}
+                    className="text-primary"
+                  />
+                )}
+              </div>
+              <div className="text-gray-700 font-medium">Total Cases</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                {statsLoading ? (
+                  <span className="text-gray-400">...</span>
+                ) : (
+                  <NumberFlowComponent 
+                    value={stats.our_volunteers} 
+                    trend={false}
+                    className="text-primary"
+                  />
+                )}
+              </div>
               <div className="text-gray-700 font-medium">Our Volunteers</div>
             </div>
           </div>

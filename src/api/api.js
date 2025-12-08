@@ -159,3 +159,53 @@ export const verifyPayment = async (razorpayOrderId, razorpayPaymentId, razorpay
   }
 }
 
+export const fetchStats = async (useCache = true) => {
+  const cacheKey = 'stats'
+  
+  // Check cache first
+  if (useCache) {
+    const cached = getCachedData(cacheKey)
+    if (cached) {
+      return cached
+    }
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}?type=stats`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch stats: ${response.status} ${response.statusText}`)
+    }
+    
+    const data = await response.json()
+    const stats = data.stats || {
+      total_donars: 0,
+      total_cases: 0,
+      our_volunteers: 0
+    }
+    
+    // Cache the result
+    setCachedData(cacheKey, stats)
+    
+    return stats
+  } catch (error) {
+    console.error('Error fetching stats:', error)
+    // Return cached data if available
+    const cached = cache.get(cacheKey)
+    if (cached) {
+      return cached.data
+    }
+    // Return default values
+    return {
+      total_donors: 0,
+      total_cases: 0,
+      our_volunteers: 0
+    }
+  }
+}
+

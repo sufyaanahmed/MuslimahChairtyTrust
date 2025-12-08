@@ -16,7 +16,8 @@ const SPREADSHEET_ID = '1xiB4jRbQJwIyHw-3xVQgSUKA7dOVhkkReJAsY3y4acE'; // Your G
 const SHEET_NAMES = {
   CASES: 'Cases',
   MEDIA: 'Media',
-  DONATIONS: 'Donations'
+  DONATIONS: 'Donations',
+  STATS: 'Stats'
 };
 
 /**
@@ -31,8 +32,10 @@ function doGet(e) {
       return getCases();
     } else if (type === 'media') {
       return getMedia();
+    } else if (type === 'stats') {
+      return getStats();
     } else {
-      return createResponse({ error: 'Invalid type parameter. Use ?type=cases or ?type=media' }, 400);
+      return createResponse({ error: 'Invalid type parameter. Use ?type=cases, ?type=media, or ?type=stats' }, 400);
     }
   } catch (error) {
     return createResponse({ error: error.toString() }, 500);
@@ -85,6 +88,7 @@ function getCases() {
     const descriptionIndex = headers.indexOf('description');
     const requiredAmountIndex = headers.indexOf('required_amount');
     const amountRaisedIndex = headers.indexOf('amount_raised');
+    const urlIndex = headers.indexOf('url'); // Optional image URL field
     
     // Check if required columns exist
     if (caseIdIndex === -1 || titleIndex === -1) {
@@ -106,7 +110,8 @@ function getCases() {
         title: row[titleIndex] ? String(row[titleIndex]) : '',
         description: row[descriptionIndex] ? String(row[descriptionIndex]) : '',
         required_amount: row[requiredAmountIndex] ? parseFloat(row[requiredAmountIndex]) || 0 : 0,
-        amount_raised: row[amountRaisedIndex] ? parseFloat(row[amountRaisedIndex]) || 0 : 0
+        amount_raised: row[amountRaisedIndex] ? parseFloat(row[amountRaisedIndex]) || 0 : 0,
+        url: urlIndex !== -1 && row[urlIndex] ? String(row[urlIndex]) : null // Optional image URL
       };
       cases.push(caseObj);
     }
@@ -143,6 +148,50 @@ function getMedia() {
   }
   
   return createResponse({ media: media });
+}
+
+/**
+ * Get stats from the Stats sheet
+ */
+function getStats() {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAMES.STATS);
+    
+    if (!sheet) {
+      return createResponse({ error: 'Stats sheet not found' }, 404);
+    }
+    
+    const data = sheet.getDataRange().getValues();
+    
+    if (data.length < 2) {
+      return createResponse({ 
+        total_donors: 0,
+        total_cases: 0,
+        our_volunteers: 0
+      });
+    }
+    
+    const headers = data[0];
+    
+    // Find column indices
+    const totalDonorsIndex = headers.indexOf('total_donors');
+    const totalCasesIndex = headers.indexOf('total_cases');
+    const ourVolunteersIndex = headers.indexOf('our_volunteers');
+    
+    // Get first row of data (assuming single row of stats)
+    const row = data[1];
+    
+    const stats = {
+      total_donors: totalDonorsIndex !== -1 ? (parseFloat(row[totalDonorsIndex]) || 0) : 0,
+      total_cases: totalCasesIndex !== -1 ? (parseFloat(row[totalCasesIndex]) || 0) : 0,
+      our_volunteers: ourVolunteersIndex !== -1 ? (parseFloat(row[ourVolunteersIndex]) || 0) : 0
+    };
+    
+    return createResponse({ stats: stats });
+  } catch (error) {
+    return createResponse({ error: error.toString() }, 500);
+  }
 }
 
 /**

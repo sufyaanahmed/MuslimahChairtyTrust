@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useData } from '../context/DataContext'
 import { PhotoGallery } from '../components/ui/PhotoGallery'
-import MediaGrid from '../components/MediaGrid'
+import { MasonryGrid } from '../components/ui/MasonryGrid'
+import MediaCard from '../components/MediaCard'
 
 const Gallery = () => {
   const { media, mediaLoading } = useData()
@@ -58,6 +59,26 @@ const Gallery = () => {
     }
   }, [loadMore, isLoadingMore, visibleMedia.length, media.length])
 
+  const [columns, setColumns] = useState(4)
+
+  // Function to determine columns based on screen width
+  const getColumns = (width) => {
+    if (width < 640) return 1    // sm
+    if (width < 1024) return 2   // lg
+    if (width < 1280) return 3   // xl
+    return 4                     // 2xl and up
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setColumns(getColumns(window.innerWidth))
+    }
+
+    handleResize() // Set initial columns on mount
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const handleViewAll = () => {
     setShowFullGallery(true)
     // Scroll to full gallery section
@@ -85,13 +106,17 @@ const Gallery = () => {
               onViewAll={handleViewAll}
             />
 
-            {/* Full Gallery Grid */}
+            {/* Full Gallery Grid - Masonry Layout */}
             {showFullGallery && (
               <div id="full-gallery" className="mt-20">
                 <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
                   All Gallery Images
                 </h2>
-                <MediaGrid media={visibleMedia} />
+                <MasonryGrid columns={columns} gap={4}>
+                  {visibleMedia.map((item) => (
+                    <MediaCard key={item.media_id} item={item} />
+                  ))}
+                </MasonryGrid>
                 {/* Loading trigger element */}
                 {visibleMedia.length < media.length && (
                   <div ref={observerRef} className="mt-8 text-center py-8">

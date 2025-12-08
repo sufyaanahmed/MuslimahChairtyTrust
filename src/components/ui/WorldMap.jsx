@@ -4,11 +4,11 @@ const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
 
 const WorldMap = ({ location = { lat: 13.0246, lng: 77.5946, label: 'We are here' } }) => {
   return (
-    <div className="relative w-full h-full bg-gray-800">
+    <div className="relative w-full h-full bg-gray-100">
       <ComposableMap
         projectionConfig={{
-          scale: 150,
-          center: [location.lng, location.lat],
+          scale: 1500, // Increased scale to zoom in on India
+          center: [location.lng, location.lat], // Centered on Bangalore
         }}
         className="w-full h-full"
       >
@@ -18,9 +18,9 @@ const WorldMap = ({ location = { lat: 13.0246, lng: 77.5946, label: 'We are here
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
-                fill="#374151"
-                stroke="#4B5563"
-                strokeWidth={0.5}
+                fill="#9CA3AF"
+                stroke="#6B7280"
+                strokeWidth={0.3}
                 style={{
                   default: { outline: 'none' },
                   hover: { outline: 'none' },
@@ -68,7 +68,7 @@ const WorldMap = ({ location = { lat: 13.0246, lng: 77.5946, label: 'We are here
                 y={-10}
                 width={80}
                 height={20}
-                fill="#374151"
+                fill="#1F2937"
                 rx={4}
                 opacity={0.9}
               />
