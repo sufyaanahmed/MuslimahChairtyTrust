@@ -45,7 +45,7 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li>Email: info@muslimahcharitytrust.org</li>
               <li>Phone: +91 1234567890</li>
-              <li>Address: Your Trust Address</li>
+              <li>Address: RT Nagar, Bangalore<br />Karnataka, India</li>
             </ul>
           </div>
         </div>

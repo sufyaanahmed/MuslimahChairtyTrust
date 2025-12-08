@@ -141,31 +141,9 @@ const Story = () => {
         </div>
       </div>
 
-      {/* Mission & Vision Section */}
+      {/* Founder Section */}
       <div className="py-12 px-4">
-        <div className="max-w-4xl mx-auto space-y-12">
-          {/* Mission */}
-          <section className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-3xl font-bold mb-4 text-primary">Our Mission</h2>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Muslimah Charity Trust is dedicated to empowering communities through
-              compassionate service and sustainable support. We believe in creating lasting
-              change by addressing the root causes of poverty, providing essential resources,
-              and fostering hope in the lives of those we serve.
-            </p>
-          </section>
-
-          {/* Vision */}
-          <section className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-3xl font-bold mb-4 text-primary">Our Vision</h2>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              We envision a world where compassion and care are accessible to all, where
-              communities are empowered to support themselves and each other, and where
-              every person has the opportunity to lead a dignified and fulfilling life.
-            </p>
-          </section>
-
-          {/* Founder */}
+        <div className="max-w-4xl mx-auto">
           <section className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-3xl font-bold mb-4 text-primary">Our Founder</h2>
             <p className="text-gray-700 leading-relaxed text-lg mb-4">
@@ -177,41 +155,6 @@ const Story = () => {
               our founder has dedicated herself to ensuring that every donation, every 
               volunteer hour, and every initiative creates maximum impact for those in need.
             </p>
-          </section>
-
-          {/* Values */}
-          <section className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-3xl font-bold mb-4 text-primary">Our Values</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h3 className="font-semibold text-primary mb-2 text-lg">Transparency</h3>
-                <p className="text-gray-700">
-                  We maintain complete transparency in all our operations, ensuring donors
-                  know exactly how their contributions are being used.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h3 className="font-semibold text-primary mb-2 text-lg">Compassion</h3>
-                <p className="text-gray-700">
-                  Every action we take is guided by compassion and a genuine desire to help
-                  those in need.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h3 className="font-semibold text-primary mb-2 text-lg">Accountability</h3>
-                <p className="text-gray-700">
-                  We hold ourselves accountable to our donors, beneficiaries, and the
-                  communities we serve.
-                </p>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h3 className="font-semibold text-primary mb-2 text-lg">Impact</h3>
-                <p className="text-gray-700">
-                  We focus on creating measurable, sustainable impact in the lives of those
-                  we serve.
-                </p>
-              </div>
-            </div>
           </section>
         </div>
       </div>
