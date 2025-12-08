@@ -5,18 +5,28 @@ const CaseCard = ({ caseData, onDonate }) => {
     ? (caseData.amount_raised / caseData.required_amount) * 100 
     : 0
 
+  // Debug: Log case data to see if URL is present
+  // console.log('Case data:', caseData)
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Optional Image */}
-      {caseData.url && (
-        <div className="w-full h-48 overflow-hidden">
+      {caseData.url && caseData.url.trim() !== '' && caseData.url !== 'null' && (
+        <div className="w-full h-48 overflow-hidden bg-gray-100">
           <img
             src={caseData.url}
-            alt={caseData.title}
+            alt={caseData.title || 'Case image'}
             className="w-full h-full object-cover"
+            loading="lazy"
             onError={(e) => {
+              console.error('Failed to load case image:', caseData.url)
               e.target.style.display = 'none'
+              e.target.parentElement.style.display = 'none'
             }}
+            onLoad={(e) => {
+              e.target.style.opacity = '1'
+            }}
+            style={{ opacity: 0, transition: 'opacity 0.3s' }}
           />
         </div>
       )}

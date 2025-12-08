@@ -123,7 +123,6 @@ const Home = () => {
       {/* Quran Verse Section */}
       <div className="mt-12">
         <QuranHero
-          arabicText="إِنَّ ٱلْمُصَّدِّقِينَ وَٱلْمُصَّدِّقَـٰتِ وَأَقْرَضُوا۟ ٱللَّهَ قَرْضًا حَسَنًۭا يُضَـٰعَفُ لَهُمْ وَلَهُمْ أَجْرٌۭ كَرِيمٌۭ ١٨"
           englishText="Indeed, the men who practice charity and the women who practice charity and [they who] have loaned Allāh a goodly loan – it will be multiplied for them, and they will have a noble reward."
           verseReference="Quran 57:18"
           gradient={true}
