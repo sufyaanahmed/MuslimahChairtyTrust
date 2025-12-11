@@ -1,12 +1,24 @@
+import { useState } from 'react'
 import ProgressBar from './ProgressBar'
 
 const CaseCard = ({ caseData, onDonate }) => {
+  const [selectedAmount, setSelectedAmount] = useState(0)
   const progress = caseData.required_amount > 0 
     ? (caseData.amount_raised / caseData.required_amount) * 100 
     : 0
 
-  // Debug: Log case data to see if URL is present
-  // console.log('Case data:', caseData)
+  const quickAmounts = [50, 100, 200, 500]
+
+  const handleQuickAmountClick = (amount) => {
+    const newAmount = selectedAmount + amount
+    setSelectedAmount(newAmount)
+  }
+
+  const handleDonateClick = () => {
+    // Ensure minimum amount is 100
+    const finalAmount = Math.max(selectedAmount || 100, 100)
+    onDonate(caseData, finalAmount)
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -50,11 +62,37 @@ const CaseCard = ({ caseData, onDonate }) => {
           </div>
         </div>
 
+        {/* Quick Amount Buttons */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Quick Select Amount
+          </label>
+          <div className="grid grid-cols-4 gap-2">
+            {quickAmounts.map((amount) => (
+              <button
+                key={amount}
+                type="button"
+                onClick={() => handleQuickAmountClick(amount)}
+                className="px-3 py-2 text-sm border border-primary text-primary rounded-md hover:bg-primary hover:text-white transition-colors duration-200 font-medium"
+              >
+                ₹{amount}
+              </button>
+            ))}
+          </div>
+          {selectedAmount > 0 && (
+            <div className="mt-2 p-2 bg-green-50 border border-primary rounded-md">
+              <p className="text-sm text-gray-700">
+                Selected: <span className="font-semibold text-primary">₹{selectedAmount}</span>
+              </p>
+            </div>
+          )}
+        </div>
+
         <button
-          onClick={() => onDonate(caseData)}
+          onClick={handleDonateClick}
           className="w-full bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition-colors duration-200"
         >
-          Donate Now
+          {selectedAmount > 0 ? `Donate ₹${selectedAmount}` : 'Donate Now'}
         </button>
       </div>
     </div>

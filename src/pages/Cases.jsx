@@ -10,18 +10,26 @@ const Cases = () => {
   const [donationAmount, setDonationAmount] = useState('')
   const [showModal, setShowModal] = useState(false)
 
-  const handleDonate = (caseData) => {
+  const handleDonate = (caseData, preSelectedAmount = 0) => {
     setDonatingCase(caseData)
+    setDonationAmount(preSelectedAmount > 0 ? preSelectedAmount.toString() : '')
     setShowModal(true)
   }
 
   const handlePayment = async () => {
-    if (!donorName || !donationAmount || !donatingCase) {
-      alert('Please fill in all fields')
+    if (!donorName || !donatingCase) {
+      alert('Please enter your name')
       return
     }
 
-    const amount = parseFloat(donationAmount) * 100 // Convert to paise
+    // Ensure minimum amount is 100
+    const amountValue = parseFloat(donationAmount) || 0
+    if (amountValue < 100) {
+      alert('Minimum donation amount is ₹100')
+      return
+    }
+
+    const amount = amountValue * 100 // Convert to paise
 
     try {
       // Create order via backend
@@ -127,16 +135,18 @@ const Cases = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Donation Amount (₹)
+                    Donation Amount (₹) *
                   </label>
                   <input
                     type="number"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Enter amount"
-                    min="1"
+                    placeholder="Enter amount (minimum ₹100)"
+                    min="100"
+                    required
                   />
+                  <p className="text-xs text-gray-500 mt-1">Minimum amount: ₹100</p>
                 </div>
                 <div className="flex space-x-4 pt-4">
                   <button

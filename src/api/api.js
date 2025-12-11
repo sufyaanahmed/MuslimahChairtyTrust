@@ -159,6 +159,94 @@ export const verifyPayment = async (razorpayOrderId, razorpayPaymentId, razorpay
   }
 }
 
+export const submitVolunteerApplication = async (formData) => {
+  console.log('Submitting volunteer application with data:', formData)
+  console.log('API URL:', `${API_BASE_URL}?type=submitVolunteer`)
+  
+  try {
+    // Use URLSearchParams to avoid CORS preflight for POST requests
+    // Google Apps Script handles form data better than JSON for CORS
+    const formDataToSend = new URLSearchParams()
+    formDataToSend.append('type', 'submitVolunteer')
+    formDataToSend.append('data', JSON.stringify(formData))
+    
+    const response = await fetch(API_BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formDataToSend.toString(),
+    })
+    
+    console.log('Response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+    
+    // Check if response is actually JSON
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text()
+      console.error('Non-JSON response from volunteer submission:')
+      console.error('Status:', response.status)
+      console.error('Content-Type:', contentType)
+      console.error('Response text:', text)
+      throw new Error(`Server returned non-JSON response (${response.status}). Check Apps Script deployment. Response: ${text.substring(0, 200)}`)
+    }
+    
+    const data = await response.json()
+    console.log('Response data:', data)
+    
+    if (!response.ok) {
+      throw new Error(data.error || `Failed to submit volunteer application: ${response.status}`)
+    }
+    
+    return data
+  } catch (error) {
+    console.error('=== ERROR SUBMITTING VOLUNTEER APPLICATION ===')
+    console.error('Error type:', error.constructor.name)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    console.error('Form data sent:', formData)
+    console.error('API URL used:', `${API_BASE_URL}?type=submitVolunteer`)
+    console.error('==============================================')
+    throw error
+  }
+}
+
+export const submitContactForm = async (formData) => {
+  try {
+    // Use form-encoded to avoid CORS preflight
+    const formDataToSend = new URLSearchParams()
+    formDataToSend.append('type', 'submitContact')
+    formDataToSend.append('data', JSON.stringify(formData))
+    
+    const response = await fetch(API_BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formDataToSend.toString(),
+    })
+    
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text()
+      console.error('Non-JSON response from contact form:', text)
+      throw new Error('Server returned non-JSON response')
+    }
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+      throw new Error(errorData.error || `Failed to submit contact form: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error submitting contact form:', error)
+    throw error
+  }
+}
+
 export const fetchStats = async (useCache = true) => {
   const cacheKey = 'stats'
   
