@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { submitVolunteerApplication } from '../api/api'
+import { Highlighter } from '../components/ui/Highlighter'
 
 const Volunteers = () => {
   const [formData, setFormData] = useState({
@@ -119,6 +120,42 @@ const Volunteers = () => {
         <p className="text-center text-gray-600 mb-12">
           Fill out the form below to register
         </p>
+
+        {/* Mission Section */}
+        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">
+            🌿 Become Part of Our Mission
+          </h2>
+          <div className="prose prose-lg max-w-none text-gray-700 space-y-4 leading-relaxed">
+            <p>
+              At Muslimah Charity Trust, our strength lies in compassion, unity, and service. 
+              As a{' '}
+              <Highlighter action="highlight" color="#FFE4B5">
+                women-led organisation
+              </Highlighter>
+              {' '}supported by dedicated{' '}
+              <Highlighter action="underline" color="#22c55e">
+                brothers and sisters in our community
+              </Highlighter>
+              , we work together to uplift families,{' '}
+              <Highlighter action="highlight" color="#FFE4B5">
+                empower women and children
+              </Highlighter>
+              , and bring hope to those in need.
+            </p>
+            <p>
+              We welcome individuals who share our passion for meaningful change. Whether you wish 
+              to contribute your time, skills, or simply offer a helping hand, your presence can 
+              make a real difference.
+            </p>
+            <p>
+              If you feel the call to serve, we'd love to hear from you.
+            </p>
+            <p className="font-semibold text-primary text-center">
+              Together, we can spread kindness and build stronger communities.
+            </p>
+          </div>
+        </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
           {submitted && (

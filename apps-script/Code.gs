@@ -502,9 +502,15 @@ function submitVolunteerApplication(postData) {
     }
     
     // Prepare row data matching header order
+    // Fix phone_number: Prefix with apostrophe to prevent Google Sheets from treating it as a formula
+    let phoneNumber = postData.phone_number || '';
+    if (phoneNumber && phoneNumber.startsWith('+')) {
+      phoneNumber = "'" + phoneNumber; // Prefix with apostrophe to make it text
+    }
+    
     const rowData = [
       postData.full_name || '',
-      postData.phone_number || '',
+      phoneNumber, // Phone number with apostrophe prefix if starts with +
       postData.email || '',
       postData.age || '',
       postData.gender || '',
@@ -514,7 +520,14 @@ function submitVolunteerApplication(postData) {
     ];
     
     // Append row
+    const lastRow = sheet.getLastRow() + 1;
     sheet.appendRow(rowData);
+    
+    // Set phone_number cell format to text to prevent formula errors
+    const phoneNumberColumnIndex = headers.indexOf('phone_number') + 1;
+    if (phoneNumberColumnIndex > 0) {
+      sheet.getRange(lastRow, phoneNumberColumnIndex).setNumberFormat('@'); // @ means text format
+    }
     
     return createResponse({
       success: true,

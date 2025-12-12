@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { fetchCases, fetchMedia } from '../api/api'
+import { fetchCases, fetchMedia, fetchStats } from '../api/api'
 
 const DataContext = createContext()
 
@@ -14,9 +14,11 @@ export const useData = () => {
 export const DataProvider = ({ children }) => {
   const [cases, setCases] = useState([])
   const [media, setMedia] = useState([])
+  const [stats, setStats] = useState({ total_donors: 0, total_cases: 0, our_volunteers: 0 })
   const [loading, setLoading] = useState(true)
   const [casesLoading, setCasesLoading] = useState(true)
   const [mediaLoading, setMediaLoading] = useState(true)
+  const [statsLoading, setStatsLoading] = useState(true)
 
   // Fetch cases immediately on app load
   useEffect(() => {
@@ -50,12 +52,28 @@ export const DataProvider = ({ children }) => {
     loadMedia()
   }, [])
 
-  // Update loading state when both are done
+  // Fetch stats on app load
   useEffect(() => {
-    if (!casesLoading && !mediaLoading) {
+    const loadStats = async () => {
+      try {
+        const data = await fetchStats(true) // Use cache
+        setStats(data)
+      } catch (error) {
+        console.error('Error loading stats:', error)
+      } finally {
+        setStatsLoading(false)
+      }
+    }
+
+    loadStats()
+  }, [])
+
+  // Update loading state when all are done
+  useEffect(() => {
+    if (!casesLoading && !mediaLoading && !statsLoading) {
       setLoading(false)
     }
-  }, [casesLoading, mediaLoading])
+  }, [casesLoading, mediaLoading, statsLoading])
 
   // Refresh functions
   const refreshCases = async () => {
@@ -85,9 +103,11 @@ export const DataProvider = ({ children }) => {
   const value = {
     cases,
     media,
+    stats,
     loading,
     casesLoading,
     mediaLoading,
+    statsLoading,
     refreshCases,
     refreshMedia,
   }

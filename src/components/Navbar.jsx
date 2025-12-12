@@ -20,8 +20,15 @@ const Navbar = () => {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-2xl font-bold text-primary">
-            Muslimah Charity Trust
+          <Link to="/" className="flex items-center gap-3">
+            <img 
+              src="/Logo.jpeg" 
+              alt="Muslimah Charity Trust Logo" 
+              className="h-10 w-10 object-contain"
+            />
+            <span className="text-2xl font-bold text-primary">
+              Muslimah Charity Trust
+            </span>
           </Link>
 
           {/* Desktop Menu */}
