@@ -12,6 +12,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        amiri: ['Amiri', 'serif'],
       },
     },
   },

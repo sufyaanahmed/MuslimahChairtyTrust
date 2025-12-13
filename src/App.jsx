@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { DataProvider } from './context/DataContext'
 import Layout from './components/Layout'
 import Loader from './components/Loader'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import Cases from './pages/Cases'
 import Volunteers from './pages/Volunteers'
@@ -18,6 +19,7 @@ function App() {
       {showLoader && <Loader onComplete={() => setShowLoader(false)} />}
       {!showLoader && (
         <Router>
+          <ScrollToTop />
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />

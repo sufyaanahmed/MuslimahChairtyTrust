@@ -17,24 +17,28 @@ const Story = () => {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500&h=500&fit=crop"
-              alt="Charity work"
+              src="https://images.unsplash.com/photo-1643321613219-6d50e1372c0a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Paper bags for food distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=500&h=500&fit=crop"
-              alt="Community service"
+              src="https://plus.unsplash.com/premium_photo-1661907706957-88832c243d2f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Community volunteers"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=500&h=500&fit=crop"
-              alt="Helping hands"
+              src="https://media.istockphoto.com/id/2171791666/photo/volunteers-arranging-items-for-donation-outdoors.jpg?s=2048x2048&w=is&k=20&c=kONBwqTBycxruddVE0niFoHViYjtR1tb3b2d8flqSFE="
+              alt="Packing donation boxes"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500&h=500&fit=crop"
-              alt="Food distribution"
+              src="https://images.unsplash.com/photo-1644726270363-e746b37b482b?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Community support"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
           </div>
         </div>
@@ -47,40 +51,97 @@ const Story = () => {
           <p className="text-gray-800 text-xs md:text-sm font-normal mb-4">
             Through dedicated efforts, we have been able to make a significant impact in our community:
           </p>
-          <div className="mb-8 space-y-2">
-            <div className="flex gap-2 items-center text-gray-700 text-xs md:text-sm">
-              ✅ <strong>Food Kits Distribution:</strong> Approximately 200 food kits distributed daily to families in need
+          <div className="mb-8 space-y-4">
+            <div className="flex gap-3 items-start text-gray-700 text-xs md:text-sm">
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                {/* Food Kit Icon */}
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <rect x="20" y="30" width="30" height="50" rx="5" fill="#4A90E2" />
+                  <rect x="25" y="35" width="20" height="8" rx="2" fill="#2E5C8A" />
+                  <circle cx="35" cy="45" r="3" fill="#FF6B6B" />
+                  <circle cx="35" cy="55" r="2" fill="#FFD93D" />
+                  <circle cx="35" cy="65" r="2.5" fill="#6BCF7F" />
+                  <rect x="50" y="25" width="30" height="40" rx="5" fill="#FFFFFF" />
+                  <path d="M55 30 L65 30 L70 35 L70 50 L55 50 Z" fill="#6BCF7F" />
+                  <circle cx="62" cy="40" r="2" fill="#FF6B6B" />
+                  <circle cx="62" cy="45" r="1.5" fill="#FFD93D" />
+                  <rect x="15" y="75" width="20" height="15" rx="3" fill="#FF6B6B" />
+                  <path d="M20 75 L25 70 L25 75 Z" fill="#6BCF7F" />
+                  <rect x="65" y="70" width="15" height="20" rx="2" fill="#FF8C42" />
+                  <path d="M70 70 L75 65 L75 70 Z" fill="#6BCF7F" />
+                </svg>
+              </div>
+              <div>
+                <strong>Food Kits Distribution:</strong> Approximately 200 food kits distributed daily to families in need
+              </div>
             </div>
-            <div className="flex gap-2 items-center text-gray-700 text-xs md:text-sm">
-              ✅ <strong>Blanket Drives:</strong> Regular blanket distribution drives for those on the streets and in hospitals
+            <div className="flex gap-3 items-start text-gray-700 text-xs md:text-sm">
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                {/* Blanket Icon */}
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <rect x="30" y="50" width="40" height="25" rx="3" fill="#87CEEB" />
+                  <path d="M30 50 Q30 45 35 45 L65 45 Q70 45 70 50" stroke="#2E5C8A" strokeWidth="2" fill="none" />
+                  <rect x="25" y="60" width="50" height="25" rx="3" fill="#FF8C42" />
+                  <path d="M25 60 Q25 55 30 55 L70 55 Q75 55 75 60" stroke="#CC6B2E" strokeWidth="2" fill="none" />
+                </svg>
+              </div>
+              <div>
+                <strong>Blanket Drives:</strong> Regular blanket distribution drives for those on the streets and in hospitals
+              </div>
             </div>
-            <div className="flex gap-2 items-center text-gray-700 text-xs md:text-sm">
-              ✅ <strong>Friday Distribution:</strong> Weekly distribution of food, fresh fruits, and ration kits every Friday
+            <div className="flex gap-3 items-start text-gray-700 text-xs md:text-sm">
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                {/* Crescent Moon and Star Icon */}
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <path d="M30 20 Q20 30 20 50 Q20 70 30 80 Q40 70 40 50 Q40 30 30 20" fill="#FFD700" />
+                  <path d="M30 20 Q35 25 35 30 Q35 35 30 40 Q25 35 25 30 Q25 25 30 20" fill="#FFA500" />
+                  <path d="M60 15 L65 25 L75 25 L67 32 L70 42 L60 35 L50 42 L53 32 L45 25 L55 25 Z" fill="#FFD700" />
+                </svg>
+              </div>
+              <div>
+                <strong>Friday Distribution:</strong> Weekly distribution of food, fresh fruits, and ration kits every Friday
+              </div>
             </div>
-            <div className="flex gap-2 items-center text-gray-700 text-xs md:text-sm">
-              ✅ <strong>Community Support:</strong> Continuous support to vulnerable families and individuals
+            <div className="flex gap-3 items-start text-gray-700 text-xs md:text-sm">
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                {/* First Aid Kit Icon */}
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <rect x="20" y="25" width="60" height="50" rx="5" fill="#2D8659" />
+                  <rect x="25" y="30" width="50" height="40" rx="3" fill="#1E5A3F" />
+                  <line x1="50" y1="35" x2="50" y2="65" stroke="white" strokeWidth="4" strokeLinecap="round" />
+                  <line x1="35" y1="50" x2="65" y2="50" stroke="white" strokeWidth="4" strokeLinecap="round" />
+                  <path d="M35 20 Q50 15 65 20" stroke="#4A9E6F" strokeWidth="3" fill="none" />
+                </svg>
+              </div>
+              <div>
+                <strong>Community Support:</strong> Continuous support to vulnerable families and individuals
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=500&h=500&fit=crop"
+              src="https://media.istockphoto.com/id/1129317555/photo/free-food-distribution-is-social-activity-for-helping-the-homeless-people-by-giving-them-food.jpg?s=2048x2048&w=is&k=20&c=O6-gZrqsCSg5PrJCFVkg_5RfsA8Rpnq2xpNztcEDFco="
               alt="Food distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=500&h=500&fit=crop"
-              alt="Blanket drive"
+              src="https://imgs.search.brave.com/3yY1-j6aMa5heM--LDBD1cpb-Bo_dF6NKAL8L01L3sk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMy/MjQ0MTQ0Ny92aWRl/by9yZWFyLXZpZXct/YXNpYW4taW5kaWFu/LWJlYXV0aWZ1bC13/b21hbi13aXRoLWRp/c2FiaWxpdHktdXNp/bmctd2hlZWxjaGFp/ci1pbi10aGUtc3Ry/ZWV0LXJvYWRzaWRl/LmpwZz9zPTY0MHg2/NDAmaz0yMCZjPWlT/XzQyTndnMFJnS1ph/dVFPWkZkcmZoUVpI/TEw1NGMtNHBTdjFf/NUJoczg9"
+              alt="Girl in wheelchair"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&h=500&fit=crop"
-              alt="Ration kits"
+              src="https://imgs.search.brave.com/nOL0wUICtkEe8XqIBUJL-ax9FgFfhFy5XFy_MP6tj2w/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTM2/Mjc4NzUzMC9waG90/by9kb25hdGlvbi1i/b3gtd2l0aC1zdHVm/Zi5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9QUZYMVM3M01s/ODBhNVMwOUpUbVI4/cTlXV2hFRW9uVXVR/SmZHLXR1elJrMD0"
+              alt="Packing blanket donation boxes"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=500&h=500&fit=crop"
-              alt="Community help"
+              src="https://images.unsplash.com/photo-1685186114062-68d0cb6b9e86?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Food kits distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
           </div>
         </div>
@@ -102,24 +163,28 @@ const Story = () => {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&h=500&fit=crop"
-              alt="Ramadan preparation"
+              src="https://imgs.search.brave.com/C9_L7FrvOhkYYTn90p1GzDt6aOOwv_RK2yjOy3ahs04/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9pZnRh/ci1tb3NxdWUtYXJh/Yi1icmVha2luZy1m/YXN0LXJhbWFkYW4t/ZnJ1aXRzLWRhdGVz/LXRyYWRpdGlvbmFs/LXN3ZWV0LW90aGVy/LWl0ZW1zLTMyNjY2/MzMxLmpwZw"
+              alt="Ramadan food distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=500&fit=crop"
-              alt="Community iftar"
+              src="https://imgs.search.brave.com/2HhrEMCUlTLolHaf_UpYxTorp_k8HFKM3Mmvb6vrOf8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdG9y/YWdlLmdvb2dsZWFw/aXMuY29tL3dwLXN0/YXRpYy93cC1vcnBo/YW5zaW5uZWVkLzIw/MjQvMDMvMTExMDdk/NzItemFrYXQtZmVl/ZC03MDB4NDUyLmpw/Zw"
+              alt="Food packages for Ramadan"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=500&h=500&fit=crop"
-              alt="Food packages"
+              src="https://imgs.search.brave.com/loB5RkZRDYCZG126-Kp8RhKXg4Jbd4jfZDiCHT1q_38/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzEv/NTUwLzcxMi9zbWFs/bC9hLW1hbi1naXZp/bmctemFrYXQtY2hh/cml0eS1kdXJpbmct/cmFtYWRhbi1tYW4t/cy1nZW5lcm9zaXR5/LWFuZC1naXZpbmct/c3Bpcml0LXRoZS1p/bWFnZS1zaG93LXRo/ZS1tYW4taGFuZGlu/Zy1vdmVyLWZvb2Qt/dG8tdGhvc2UtaW4t/bmVlZC1nZW5lcmF0/aXZlLWFpLXBob3Rv/LmpwZw"
+              alt="Community volunteers during Ramadan"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=500&h=500&fit=crop"
-              alt="Charity work"
+              src="https://imgs.search.brave.com/JLdKqkNwnxcwW8Q--gQhmP8RMdjDnuM5A9eyjU-qf4c/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzEv/NTUwLzcwOS9zbWFs/bC9hLW1hbi1naXZp/bmctemFrYXQtY2hh/cml0eS1kdXJpbmct/cmFtYWRhbi1tYW4t/cy1nZW5lcm9zaXR5/LWFuZC1naXZpbmct/c3Bpcml0LXRoZS1p/bWFnZS1zaG93LXRo/ZS1tYW4taGFuZGlu/Zy1vdmVyLWZvb2Qt/dG8tdGhvc2UtaW4t/bmVlZC1nZW5lcmF0/aXZlLWFpLXBob3Rv/LmpwZw"
+              alt="Charity work during Ramadan"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
+              loading="lazy"
             />
           </div>
         </div>
@@ -129,17 +194,26 @@ const Story = () => {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      {/* Hero Section */}
-      <div className="py-12 px-4 bg-gradient-to-r from-primary to-green-600 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      {/* Hero Section with Banner */}
+      <section 
+        className="relative text-white py-20 px-4 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/our_story_banner.jpg)',
+          minHeight: '400px',
+        }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
             Our Story
           </h1>
-          <p className="text-xl text-green-50 mb-8">
+          <p className="text-xl text-white mb-8 drop-shadow-md">
             Learn about our journey, mission, and vision
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Founder Section */}
       <div className="py-12 px-4">

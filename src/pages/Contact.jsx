@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { submitContactForm } from '../api/api'
 
@@ -12,6 +12,7 @@ const Contact = () => {
   })
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const successRef = useRef(null)
 
   const handleChange = (e) => {
     setFormData({
@@ -28,6 +29,12 @@ const Contact = () => {
       await submitContactForm(formData)
       setSubmitted(true)
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+      // Scroll to success message
+      setTimeout(() => {
+        if (successRef.current) {
+          successRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
       setTimeout(() => setSubmitted(false), 5000)
     } catch (error) {
       alert('Failed to submit form. Please try again.')
@@ -78,7 +85,7 @@ const Contact = () => {
 
           <div className="bg-white rounded-lg shadow-md p-8 md:p-12">
             {submitted && (
-              <div className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
+              <div ref={successRef} className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
                 <p className="text-primary font-semibold">
                   Thank you! Your message has been sent. We'll get back to you soon.
                 </p>

@@ -569,18 +569,31 @@ function submitContactForm(postData) {
       sheet.appendRow(headers);
     }
     
+    // Fix phone: Prefix with apostrophe to prevent Google Sheets from treating it as a formula
+    let phoneNumber = postData.phone || '';
+    if (phoneNumber && phoneNumber.startsWith('+')) {
+      phoneNumber = "'" + phoneNumber; // Prefix with apostrophe to make it text
+    }
+    
     // Prepare row data matching header order
     const rowData = [
       new Date(), // timestamp
       postData.name || '',
       postData.email || '',
-      postData.phone || '',
+      phoneNumber, // Phone number with apostrophe prefix if starts with +
       postData.subject || '',
       postData.message || ''
     ];
     
     // Append row
+    const lastRow = sheet.getLastRow() + 1;
     sheet.appendRow(rowData);
+    
+    // Set phone cell format to text to prevent formula errors
+    const phoneColumnIndex = headers.indexOf('phone') + 1;
+    if (phoneColumnIndex > 0) {
+      sheet.getRange(lastRow, phoneColumnIndex).setNumberFormat('@'); // @ means text format
+    }
     
     return createResponse({
       success: true,

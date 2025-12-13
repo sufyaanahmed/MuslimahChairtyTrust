@@ -88,12 +88,38 @@ const Cases = () => {
   return (
     <div className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4 text-gray-900">
-          Donation Cases
-        </h1>
-        <p className="text-center text-gray-600 mb-12">
-          Choose a case to support and make a difference
-        </p>
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            Donation Cases
+          </h1>
+          <p className="text-xl text-gray-600 mb-6 max-w-3xl mx-auto">
+            Choose a case to support and make a difference
+          </p>
+        </div>
+
+        {/* Meaningful Text Section */}
+        <div className="bg-green-50 rounded-lg p-8 mb-12 max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-primary">
+            Every Donation Makes a Difference
+          </h2>
+          <div className="prose prose-lg max-w-none text-gray-700 space-y-4 text-center">
+            <p className="text-lg leading-relaxed">
+              At <strong>Muslimah Charity Trust</strong>, we believe that every act of charity, 
+              no matter how small, creates a ripple of positive change. Our donation cases 
+              represent real families, individuals, and communities who need your support.
+            </p>
+            <p className="text-lg leading-relaxed">
+              When you donate to a case, you're not just giving money—you're providing hope, 
+              dignity, and the means for someone to overcome their challenges. Whether it's 
+              medical expenses, food security, education, or emergency relief, your contribution 
+              directly impacts lives.
+            </p>
+            <p className="text-lg leading-relaxed font-semibold text-primary">
+              Together, we can build a stronger, more compassionate community where no one is left behind.
+            </p>
+          </div>
+        </div>
 
         {casesLoading ? (
           <div className="text-center py-12">

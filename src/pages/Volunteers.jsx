@@ -18,6 +18,7 @@ const Volunteers = () => {
   const [showConfirm, setShowConfirm] = useState(false)
 
   const confirmRef = useRef(null)
+  const successRef = useRef(null)
 
   const INTEREST_OPTIONS = [
     'Photography',
@@ -81,6 +82,12 @@ const Volunteers = () => {
         blood_group: '',
         address: '',
       })
+      // Scroll to success message
+      setTimeout(() => {
+        if (successRef.current) {
+          successRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
       setTimeout(() => setSubmitted(false), 5000)
     } catch (error) {
       console.error('=== VOLUNTEER FORM SUBMISSION ERROR ===')
@@ -159,9 +166,9 @@ const Volunteers = () => {
 
         <div className="bg-white rounded-lg shadow-md p-8">
           {submitted && (
-            <div className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
+            <div ref={successRef} className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
               <p className="text-primary font-semibold">
-                Thank you! Your application has been submitted. We'll get back to you soon.
+                Thank you! Your volunteer application has been submitted successfully. We'll get back to you soon.
               </p>
             </div>
           )}
