@@ -132,13 +132,13 @@ const Story = () => {
               loading="lazy"
             />
             <img
-              src="/Our_story_1.jpg"
+              src="/Our_story_3.jpg"
               alt="Packing donation boxes"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="/Our_story_2.jpg"
+              src="/Our_story_4.jpg"
               alt="Community outreach and support"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
@@ -175,13 +175,13 @@ const Story = () => {
               loading="lazy"
             />
             <img
-              src="/Our_story_1.jpg"
+              src="/Our_story_4.jpg"
               alt="Serving meals during Ramadan"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="/Our_story_2.jpg"
+              src="/Our_story_3.jpg"
               alt="Community gathering during Ramadan outreach"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
