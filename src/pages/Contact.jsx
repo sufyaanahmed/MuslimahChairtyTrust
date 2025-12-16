@@ -23,6 +23,16 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Simple phone validation: allow empty OR a valid "+91 12345 67890" style number
+    const phoneTrimmed = formData.phone.trim()
+    const phonePattern = /^\+?\d{1,3}\s?\d{5}\s?\d{5}$/
+
+    if (phoneTrimmed && !phonePattern.test(phoneTrimmed)) {
+      alert('Please enter a valid phone number, e.g. "+91 12345 67890".')
+      return
+    }
+
     setSubmitting(true)
     
     try {
@@ -85,7 +95,7 @@ const Contact = () => {
 
           <div className="bg-white rounded-lg shadow-md p-8 md:p-12">
             {submitted && (
-              <div ref={successRef} className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
+              <div ref={successRef} className="mb-6 p-4 bg-accent/10 border border-primary rounded-md">
                 <p className="text-primary font-semibold">
                   Thank you! Your message has been sent. We'll get back to you soon.
                 </p>
@@ -134,7 +144,7 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors placeholder-gray-400"
-                    placeholder="Enter your phone number"
+                    placeholder="+91 12345 67890"
                   />
                 </div>
 
@@ -171,7 +181,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-primary hover:bg-green-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide"
+                className="w-full bg-primary hover:bg-primary/80 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide"
               >
                 {submitting ? 'Sending...' : 'Send a message'}
               </button>

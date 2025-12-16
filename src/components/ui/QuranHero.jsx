@@ -19,7 +19,7 @@ const QuranHero = React.forwardRef(
       <section
         ref={ref}
         className={cn(
-          "relative z-0 flex min-h-[60vh] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-green-50 to-white",
+          "relative z-0 flex min-h-[60vh] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-accent/10 to-white",
           className,
         )}
         {...props}
@@ -64,8 +64,8 @@ const QuranHero = React.forwardRef(
               }}
               className="absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] bg-gradient-conic from-primary/40 via-transparent to-transparent [--conic-position:from_70deg_at_center_top]"
             >
-              <div className="absolute w-[100%] left-0 bg-gradient-to-br from-green-50 to-white h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
-              <div className="absolute w-40 h-[100%] left-0 bg-gradient-to-br from-green-50 to-white bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
+              <div className="absolute w-[100%] left-0 bg-gradient-to-br from-accent/10 to-white h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+              <div className="absolute w-40 h-[100%] left-0 bg-gradient-to-br from-accent/10 to-white bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
             </motion.div>
             
             {/* Right gradient cone */}
@@ -82,8 +82,8 @@ const QuranHero = React.forwardRef(
               }}
               className="absolute inset-auto left-1/2 h-56 w-[30rem] bg-gradient-conic from-transparent via-transparent to-primary/40 [--conic-position:from_290deg_at_center_top]"
             >
-              <div className="absolute w-40 h-[100%] right-0 bg-gradient-to-br from-green-50 to-white bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
-              <div className="absolute w-[100%] right-0 bg-gradient-to-br from-green-50 to-white h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+              <div className="absolute w-40 h-[100%] right-0 bg-gradient-to-br from-accent/10 to-white bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
+              <div className="absolute w-[100%] right-0 bg-gradient-to-br from-accent/10 to-white h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
             </motion.div>
           </div>
         )}

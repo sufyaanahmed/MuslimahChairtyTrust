@@ -19,7 +19,8 @@ const SHEET_NAMES = {
   DONATIONS: 'Donations',
   STATS: 'Stats',
   APPLICANTS: 'Applicants',
-  CONTACTS: 'Contacts'
+  CONTACTS: 'Contacts',
+  BLOGS: 'blogs', // New sheet for blog posts
 };
 
 /**
@@ -69,8 +70,10 @@ function doGet(e) {
       return getMedia();
     } else if (type === 'stats') {
       return getStats();
+    } else if (type === 'blogs') {
+      return getBlogs();
     } else {
-      return createResponse({ error: 'Invalid type parameter. Use ?type=cases, ?type=media, ?type=stats, or ?type=test' }, 400);
+      return createResponse({ error: 'Invalid type parameter. Use ?type=cases, ?type=media, ?type=stats, ?type=blogs, or ?type=test' }, 400);
     }
   } catch (error) {
     // Catch any unexpected errors
@@ -326,6 +329,70 @@ function getStats() {
     return createResponse({ stats: stats });
   } catch (error) {
     return createResponse({ error: error.toString() }, 500);
+  }
+}
+
+/**
+ * Get blogs from the Blogs sheet
+ * Expected headers in the "blogs" sheet:
+ * id, title, summary, content, imageUrl, author, date
+ */
+function getBlogs() {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAMES.BLOGS);
+
+    if (!sheet) {
+      return createResponse({
+        blogs: [],
+        warning: 'Blogs sheet not found. Create a sheet named "blogs" with headers: id, title, summary, content, imageUrl, author, date.',
+      });
+    }
+
+    const data = sheet.getDataRange().getValues();
+    if (!data || data.length < 2) {
+      return createResponse({ blogs: [] });
+    }
+
+    const headers = data[0];
+
+    const idIndex = headers.indexOf('id');
+    const titleIndex = headers.indexOf('title');
+    const summaryIndex = headers.indexOf('summary');
+    const contentIndex = headers.indexOf('content');
+    const imageUrlIndex = headers.indexOf('imageUrl');
+    const authorIndex = headers.indexOf('author');
+    const dateIndex = headers.indexOf('date');
+
+    const blogs = [];
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const id = idIndex !== -1 ? row[idIndex] : '';
+
+      // Skip completely empty rows
+      if (!id && !row[titleIndex]) {
+        continue;
+      }
+
+      const blog = {
+        id: id ? String(id) : '',
+        title: titleIndex !== -1 && row[titleIndex] ? String(row[titleIndex]) : '',
+        summary: summaryIndex !== -1 && row[summaryIndex] ? String(row[summaryIndex]) : '',
+        content: contentIndex !== -1 && row[contentIndex] ? String(row[contentIndex]) : '',
+        imageUrl: imageUrlIndex !== -1 && row[imageUrlIndex] ? String(row[imageUrlIndex]) : '',
+        author: authorIndex !== -1 && row[authorIndex] ? String(row[authorIndex]) : '',
+        date: dateIndex !== -1 && row[dateIndex] ? String(row[dateIndex]) : '',
+      };
+
+      blogs.push(blog);
+    }
+
+    return createResponse({ blogs: blogs });
+  } catch (error) {
+    return createResponse({
+      error: 'Error in getBlogs: ' + error.toString(),
+      stack: error.stack || 'No stack trace',
+    }, 500);
   }
 }
 

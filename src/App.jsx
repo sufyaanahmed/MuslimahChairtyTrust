@@ -9,6 +9,7 @@ import Cases from './pages/Cases'
 import Volunteers from './pages/Volunteers'
 import Gallery from './pages/Gallery'
 import Story from './pages/Story'
+import Blog from './pages/Blog'
 import Contact from './pages/Contact'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
               <Route path="/volunteers" element={<Volunteers />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/story" element={<Story />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </Layout>

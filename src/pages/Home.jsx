@@ -10,6 +10,7 @@ import { QuranHero } from '../components/ui/QuranHero'
 const Home = () => {
   const { cases, media, loading } = useData()
   const [isLoaded, setIsLoaded] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [stats, setStats] = useState({
     total_donors: 0,
     total_cases: 0,
@@ -24,7 +25,12 @@ const Home = () => {
   useEffect(() => {
     // Trigger animation after component mounts
     setIsLoaded(true)
-    
+
+    // Hero image slideshow
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 2)
+    }, 6000)
+
     // Fetch stats from Google Sheets
     const loadStats = async () => {
       try {
@@ -39,6 +45,10 @@ const Home = () => {
     }
     
     loadStats()
+
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   const handleDonate = (caseData) => {
@@ -49,16 +59,36 @@ const Home = () => {
     <div>
       {/* Hero Section */}
       <section 
-        className={`relative text-white py-20 px-4 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+        className={`relative text-white py-20 px-4 overflow-hidden transition-opacity duration-1000 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{
-          backgroundImage: 'url(/hero_image2.jpg)',
-          minHeight: '500px',
-        }}
       >
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        {/* Sliding background images */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className="flex h-full w-full transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            <div className="min-w-full h-full">
+              <img
+                src="/Hero_image_1.jpg"
+                alt="Charity work and community support"
+                className="w-full h-full object-cover"
+                loading="eager"
+              />
+            </div>
+            <div className="min-w-full h-full">
+              <img
+                src="/Hero_image_2.jpg"
+                alt="Volunteers helping the community"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+        </div>
         
         <div className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 delay-300 ${
           isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
@@ -133,7 +163,7 @@ const Home = () => {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link
             to="/volunteers"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-green-600 text-white px-8 py-3 rounded-md font-semibold text-lg transition-colors duration-200 shadow-lg"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-white px-8 py-3 rounded-md font-semibold text-lg transition-colors duration-200 shadow-lg"
           >
             <svg
               className="w-5 h-5"
@@ -152,7 +182,7 @@ const Home = () => {
           </Link>
           <Link
             to="/story"
-            className="inline-flex items-center gap-2 bg-white border-2 border-primary text-primary hover:bg-green-50 px-8 py-3 rounded-md font-semibold text-lg transition-colors duration-200 shadow-lg"
+            className="inline-flex items-center gap-2 bg-white border-2 border-primary text-primary hover:bg-accent/20 px-8 py-3 rounded-md font-semibold text-lg transition-colors duration-200 shadow-lg"
           >
             <svg
               className="w-5 h-5"
@@ -177,7 +207,7 @@ const Home = () => {
 
 
       {/* Stats Section */}
-      <section className="py-16 px-4 bg-green-50">
+      <section className="py-16 px-4 bg-accent/10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Total Donors */}

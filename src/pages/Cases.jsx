@@ -99,7 +99,7 @@ const Cases = () => {
         </div>
 
         {/* Meaningful Text Section */}
-        <div className="bg-green-50 rounded-lg p-8 mb-12 max-w-4xl mx-auto">
+        <div className="bg-accent/10 rounded-lg p-8 mb-12 max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-primary">
             Every Donation Makes a Difference
           </h2>
@@ -177,7 +177,7 @@ const Cases = () => {
                 <div className="flex space-x-4 pt-4">
                   <button
                     onClick={handlePayment}
-                    className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition-colors"
+                    className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors"
                   >
                     Proceed to Pay
                   </button>

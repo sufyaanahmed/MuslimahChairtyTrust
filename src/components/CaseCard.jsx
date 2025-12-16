@@ -111,7 +111,7 @@ const CaseCard = ({ caseData, onDonate }) => {
 
         <button
           onClick={handleDonateClick}
-          className="w-full bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition-colors duration-200"
+          className="w-full bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors duration-200"
         >
           {donationAmount ? `Donate ₹${parseFloat(donationAmount) || 0}` : 'Donate Now'}
         </button>

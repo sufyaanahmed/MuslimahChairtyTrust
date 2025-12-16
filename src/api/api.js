@@ -113,6 +113,44 @@ export const fetchMedia = async (useCache = true) => {
   }
 }
 
+export const fetchBlogs = async (useCache = true) => {
+  const cacheKey = 'blogs'
+
+  if (useCache) {
+    const cached = getCachedData(cacheKey)
+    if (cached) {
+      return cached
+    }
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}?type=blogs`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch blogs: ${response.status} ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    const blogs = data.blogs || []
+
+    setCachedData(cacheKey, blogs)
+
+    return blogs
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+    const cached = cache.get(cacheKey)
+    if (cached) {
+      return cached.data
+    }
+    return []
+  }
+}
+
 export const createRazorpayOrder = async (caseId, amount) => {
   try {
     const response = await fetch(`${API_BASE_URL}?type=createOrder`, {

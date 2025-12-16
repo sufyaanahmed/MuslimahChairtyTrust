@@ -17,26 +17,26 @@ const Story = () => {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://images.unsplash.com/photo-1643321613219-6d50e1372c0a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Paper bags for food distribution"
+              src="/Our_story_1.jpg"
+              alt="Muslimah Charity Trust community work"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://plus.unsplash.com/premium_photo-1661907706957-88832c243d2f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Community volunteers"
+              src="/Our_story_2.jpg"
+              alt="Volunteers at Muslimah Charity Trust"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://media.istockphoto.com/id/2171791666/photo/volunteers-arranging-items-for-donation-outdoors.jpg?s=2048x2048&w=is&k=20&c=kONBwqTBycxruddVE0niFoHViYjtR1tb3b2d8flqSFE="
-              alt="Packing donation boxes"
+              src="/Our_story_1.jpg"
+              alt="Food and essential supplies prepared for distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1644726270363-e746b37b482b?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Community support"
+              src="/Our_story_2.jpg"
+              alt="Community members receiving support"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
@@ -120,26 +120,26 @@ const Story = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://media.istockphoto.com/id/1129317555/photo/free-food-distribution-is-social-activity-for-helping-the-homeless-people-by-giving-them-food.jpg?s=2048x2048&w=is&k=20&c=O6-gZrqsCSg5PrJCFVkg_5RfsA8Rpnq2xpNztcEDFco="
-              alt="Food distribution"
+              src="/Our_story_1.jpg"
+              alt="Food distribution at Muslimah Charity Trust"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://imgs.search.brave.com/3yY1-j6aMa5heM--LDBD1cpb-Bo_dF6NKAL8L01L3sk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMy/MjQ0MTQ0Ny92aWRl/by9yZWFyLXZpZXct/YXNpYW4taW5kaWFu/LWJlYXV0aWZ1bC13/b21hbi13aXRoLWRp/c2FiaWxpdHktdXNp/bmctd2hlZWxjaGFp/ci1pbi10aGUtc3Ry/ZWV0LXJvYWRzaWRl/LmpwZz9zPTY0MHg2/NDAmaz0yMCZjPWlT/XzQyTndnMFJnS1ph/dVFPWkZkcmZoUVpI/TEw1NGMtNHBTdjFf/NUJoczg9"
-              alt="Girl in wheelchair"
+              src="/Our_story_2.jpg"
+              alt="Support for families and children"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://imgs.search.brave.com/nOL0wUICtkEe8XqIBUJL-ax9FgFfhFy5XFy_MP6tj2w/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTM2/Mjc4NzUzMC9waG90/by9kb25hdGlvbi1i/b3gtd2l0aC1zdHVm/Zi5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9QUZYMVM3M01s/ODBhNVMwOUpUbVI4/cTlXV2hFRW9uVXVR/SmZHLXR1elJrMD0"
-              alt="Packing blanket donation boxes"
+              src="/Our_story_1.jpg"
+              alt="Packing donation boxes"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://images.unsplash.com/photo-1685186114062-68d0cb6b9e86?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Food kits distribution"
+              src="/Our_story_2.jpg"
+              alt="Community outreach and support"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
@@ -163,26 +163,26 @@ const Story = () => {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="https://imgs.search.brave.com/C9_L7FrvOhkYYTn90p1GzDt6aOOwv_RK2yjOy3ahs04/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9pZnRh/ci1tb3NxdWUtYXJh/Yi1icmVha2luZy1m/YXN0LXJhbWFkYW4t/ZnJ1aXRzLWRhdGVz/LXRyYWRpdGlvbmFs/LXN3ZWV0LW90aGVy/LWl0ZW1zLTMyNjY2/MzMxLmpwZw"
-              alt="Ramadan food distribution"
+              src="/Our_story_1.jpg"
+              alt="Ramadan food distribution at Muslimah Charity Trust"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://imgs.search.brave.com/2HhrEMCUlTLolHaf_UpYxTorp_k8HFKM3Mmvb6vrOf8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdG9y/YWdlLmdvb2dsZWFw/aXMuY29tL3dwLXN0/YXRpYy93cC1vcnBo/YW5zaW5uZWVkLzIw/MjQvMDMvMTExMDdk/NzItemFrYXQtZmVl/ZC03MDB4NDUyLmpw/Zw"
-              alt="Food packages for Ramadan"
+              src="/Our_story_2.jpg"
+              alt="Ramadan care packages being prepared"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://imgs.search.brave.com/loB5RkZRDYCZG126-Kp8RhKXg4Jbd4jfZDiCHT1q_38/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzEv/NTUwLzcxMi9zbWFs/bC9hLW1hbi1naXZp/bmctemFrYXQtY2hh/cml0eS1kdXJpbmct/cmFtYWRhbi1tYW4t/cy1nZW5lcm9zaXR5/LWFuZC1naXZpbmct/c3Bpcml0LXRoZS1p/bWFnZS1zaG93LXRo/ZS1tYW4taGFuZGlu/Zy1vdmVyLWZvb2Qt/dG8tdGhvc2UtaW4t/bmVlZC1nZW5lcmF0/aXZlLWFpLXBob3Rv/LmpwZw"
-              alt="Community volunteers during Ramadan"
+              src="/Our_story_1.jpg"
+              alt="Serving meals during Ramadan"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="https://imgs.search.brave.com/JLdKqkNwnxcwW8Q--gQhmP8RMdjDnuM5A9eyjU-qf4c/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzEv/NTUwLzcwOS9zbWFs/bC9hLW1hbi1naXZp/bmctemFrYXQtY2hh/cml0eS1kdXJpbmct/cmFtYWRhbi1tYW4t/cy1nZW5lcm9zaXR5/LWFuZC1naXZpbmct/c3Bpcml0LXRoZS1p/bWFnZS1zaG93LXRo/ZS1tYW4taGFuZGlu/Zy1vdmVyLWZvb2Qt/dG8tdGhvc2UtaW4t/bmVlZC1nZW5lcmF0/aXZlLWFpLXBob3Rv/LmpwZw"
-              alt="Charity work during Ramadan"
+              src="/Our_story_2.jpg"
+              alt="Community gathering during Ramadan outreach"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
@@ -241,9 +241,9 @@ const Story = () => {
       {/* Call to Action */}
       <div className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <section className="bg-gradient-to-r from-primary to-green-600 text-white rounded-lg shadow-md p-8 text-center">
+          <section className="bg-gradient-to-r from-primary to-accent text-white rounded-lg shadow-md p-8 text-center">
             <h2 className="text-3xl font-bold mb-4">Join Us in Making a Difference</h2>
-            <p className="text-lg mb-6 text-green-50">
+            <p className="text-lg mb-6 text-accent">
               Whether through donations, volunteering, or spreading awareness, your support
               helps us continue our mission of empowering communities.
             </p>

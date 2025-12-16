@@ -49,6 +49,16 @@ const Volunteers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Phone validation: require a valid "+91 12345 67890" style number
+    const phoneTrimmed = formData.phone_number.trim()
+    const phonePattern = /^\+?\d{1,3}\s?\d{5}\s?\d{5}$/
+
+    if (!phonePattern.test(phoneTrimmed)) {
+      alert('Please enter a valid phone number, e.g. "+91 12345 67890".')
+      return
+    }
+
     setShowConfirm(true)
   }
 
@@ -166,7 +176,7 @@ const Volunteers = () => {
 
         <div className="bg-white rounded-lg shadow-md p-8">
           {submitted && (
-            <div ref={successRef} className="mb-6 p-4 bg-green-50 border border-primary rounded-md">
+            <div ref={successRef} className="mb-6 p-4 bg-accent/10 border border-primary rounded-md">
               <p className="text-primary font-semibold">
                 Thank you! Your volunteer application has been submitted successfully. We'll get back to you soon.
               </p>
@@ -175,7 +185,7 @@ const Volunteers = () => {
 
           {/* Confirmation Dialog */}
           {showConfirm && (
-            <div ref={confirmRef} className="mb-6 p-6 bg-green-50 border-2 border-primary rounded-lg">
+            <div ref={confirmRef} className="mb-6 p-6 bg-accent/10 border-2 border-primary rounded-lg">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Please review your information:
               </h3>
@@ -193,7 +203,7 @@ const Volunteers = () => {
                 <button
                   onClick={handleConfirmSubmit}
                   disabled={submitting}
-                  className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition-colors disabled:opacity-50"
+                  className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Confirm & Submit'}
                 </button>
@@ -235,7 +245,7 @@ const Volunteers = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors placeholder-gray-400"
-                  placeholder="Enter your phone number"
+                  placeholder="+91 12345 67890"
                 />
               </div>
 
@@ -303,7 +313,7 @@ const Volunteers = () => {
                     <label
                       key={option}
                       className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${
-                        checked ? 'border-primary bg-green-50' : 'border-gray-200 bg-white'
+                        checked ? 'border-primary bg-accent/10' : 'border-gray-200 bg-white'
                       }`}
                     >
                       <input
@@ -362,7 +372,7 @@ const Volunteers = () => {
             <button
               type="submit"
               disabled={submitting || showConfirm}
-              className="w-full bg-primary text-white py-3 px-6 rounded-md font-semibold hover:bg-green-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white py-3 px-6 rounded-md font-semibold hover:bg-primary/80 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Submitting...' : 'Submit Application'}
             </button>
