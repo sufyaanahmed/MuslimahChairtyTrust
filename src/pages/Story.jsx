@@ -29,13 +29,13 @@ const Story = () => {
               loading="lazy"
             />
             <img
-              src="/Our_story_1.jpg"
+              src="/Our_story_3.jpg"
               alt="Food and essential supplies prepared for distribution"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
             />
             <img
-              src="/Our_story_2.jpg"
+              src="/Our_story_4.jpg"
               alt="Community members receiving support"
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-lg"
               loading="lazy"
