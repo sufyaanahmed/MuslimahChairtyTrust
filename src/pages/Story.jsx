@@ -243,7 +243,7 @@ const Story = () => {
         <div className="max-w-4xl mx-auto">
           <section className="bg-gradient-to-r from-primary to-accent text-white rounded-lg shadow-md p-8 text-center">
             <h2 className="text-3xl font-bold mb-4">Join Us in Making a Difference</h2>
-            <p className="text-lg mb-6 text-accent">
+            <p className="text-lg mb-6 text-white">
               Whether through donations, volunteering, or spreading awareness, your support
               helps us continue our mission of empowering communities.
             </p>

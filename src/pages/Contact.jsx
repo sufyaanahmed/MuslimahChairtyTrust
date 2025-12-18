@@ -215,10 +215,10 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Helpline</h3>
                   <a
-                    href="tel:+918660856709"
+                    href="tel:+918105566551"
                     className="text-gray-600 hover:text-primary transition-colors"
                   >
-                    +91 866 08 56709
+                    +91 81055 66551
                   </a>
                 </div>
               </div>

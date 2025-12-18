@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useData } from '../context/DataContext'
 import { createRazorpayOrder, verifyPayment } from '../api/api'
 import CaseCard from '../components/CaseCard'
@@ -9,6 +9,49 @@ const Cases = () => {
   const [donorName, setDonorName] = useState('')
   const [donationAmount, setDonationAmount] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const casesRef = useRef(null)
+
+  // Auto-scroll to cases after 2 seconds
+  useEffect(() => {
+    const scrollToElementSlowly = (
+      element,
+      duration = 2000,
+      offset = 150 // ⬅️ space before cases
+    ) => {
+      const start = window.pageYOffset
+      const elementTop = element.getBoundingClientRect().top + start
+      const end = elementTop - offset // ⬅️ stop early
+      const distance = end - start
+      let startTime = null
+  
+      const easeInOut = (t) =>
+        t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+  
+      const animation = (currentTime) => {
+        if (!startTime) startTime = currentTime
+        const timeElapsed = currentTime - startTime
+        const progress = Math.min(timeElapsed / duration, 1)
+  
+        window.scrollTo(0, start + distance * easeInOut(progress))
+  
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation)
+        }
+      }
+  
+      requestAnimationFrame(animation)
+    }
+  
+    const timer = setTimeout(() => {
+      if (casesRef.current && cases.length > 0) {
+        scrollToElementSlowly(casesRef.current, 3000, 120) // ⬅️ adjust 100–200
+      }
+    }, 2000)
+  
+    return () => clearTimeout(timer)
+  }, [cases.length])
+  
+  
 
   const handleDonate = (caseData, preSelectedAmount = 0) => {
     setDonatingCase(caseData)
@@ -67,6 +110,7 @@ const Cases = () => {
         },
         prefill: {
           name: donorName,
+          contact: '+919844507137', // Razorpay contact number
         },
         theme: {
           color: '#22c55e',
@@ -126,7 +170,7 @@ const Cases = () => {
             <p className="text-gray-600">Loading cases...</p>
           </div>
         ) : cases.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div ref={casesRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cases.map((caseData) => (
               <div key={caseData.case_id} id={`case-${caseData.case_id}`}>
                 <CaseCard caseData={caseData} onDonate={handleDonate} />

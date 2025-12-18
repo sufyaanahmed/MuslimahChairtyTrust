@@ -1,22 +1,26 @@
-import { useMemo, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo, useState, useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import CaseCard from '../components/CaseCard'
 import MediaGrid from '../components/MediaGrid'
 import NumberFlowComponent from '../components/ui/NumberFlow'
 import { fetchStats } from '../api/api'
 import { QuranHero } from '../components/ui/QuranHero'
+import { BorderTrail } from '../components/ui/BorderTrail'
 
 const Home = () => {
   const { cases, media, loading } = useData()
+  const location = useLocation()
   const [isLoaded, setIsLoaded] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [highlightedCase, setHighlightedCase] = useState(null)
   const [stats, setStats] = useState({
     total_donors: 0,
     total_cases: 0,
     our_volunteers: 0
   })
   const [statsLoading, setStatsLoading] = useState(true)
+  const highlightTimeoutRef = useRef(null)
 
   // Get featured items (first 3)
   const featuredCases = useMemo(() => cases.slice(0, 3), [cases])
@@ -30,7 +34,7 @@ const Home = () => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 2)
     }, 6000)
-
+    
     // Fetch stats from Google Sheets
     const loadStats = async () => {
       try {
@@ -46,10 +50,32 @@ const Home = () => {
     
     loadStats()
 
+    // Listen for highlight trigger from Donate Now button
+    const handleHighlightCases = () => {
+      if (featuredCases.length > 0) {
+        let currentIndex = 0
+        const highlightInterval = setInterval(() => {
+          setHighlightedCase(featuredCases[currentIndex]?.case_id || null)
+          currentIndex = (currentIndex + 1) % featuredCases.length
+        }, 2000)
+        
+        highlightTimeoutRef.current = setTimeout(() => {
+          clearInterval(highlightInterval)
+          setHighlightedCase(null)
+        }, featuredCases.length * 2000 + 1000)
+      }
+    }
+
+    window.addEventListener('highlightCases', handleHighlightCases)
+    
     return () => {
       clearInterval(interval)
+      window.removeEventListener('highlightCases', handleHighlightCases)
+      if (highlightTimeoutRef.current) {
+        clearTimeout(highlightTimeoutRef.current)
+      }
     }
-  }, [])
+  }, [featuredCases])
 
   const handleDonate = (caseData) => {
     window.location.href = `/cases#case-${caseData.case_id}`
@@ -86,7 +112,7 @@ const Home = () => {
               />
             </div>
           </div>
-          {/* Overlay for better text readability */}
+        {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-black bg-opacity-50" />
         </div>
         
@@ -271,7 +297,7 @@ const Home = () => {
       </section>
 
       {/* Featured Cases */}
-      <section className="py-16 px-4">
+      <section id="featured-cases" className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
             Featured Cases
@@ -283,11 +309,21 @@ const Home = () => {
           ) : featuredCases.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredCases.map((caseData) => (
-                <CaseCard
-                  key={caseData.case_id}
-                  caseData={caseData}
-                  onDonate={handleDonate}
-                />
+                <div 
+                  key={caseData.case_id} 
+                  className={`relative transition-all duration-500 ${
+                    highlightedCase === caseData.case_id ? 'scale-105 z-10' : ''
+                  }`}
+                  id={`featured-case-${caseData.case_id}`}
+                >
+                  {highlightedCase === caseData.case_id && (
+                    <BorderTrail size={80} />
+                  )}
+                  <CaseCard
+                    caseData={caseData}
+                    onDonate={handleDonate}
+                  />
+                </div>
               ))}
             </div>
           ) : (

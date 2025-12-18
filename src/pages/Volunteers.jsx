@@ -128,6 +128,50 @@ const Volunteers = () => {
     }
   }, [showConfirm])
 
+  // Auto-scroll to form after 2 seconds
+  const formRef = useRef(null)
+
+useEffect(() => {
+  const scrollToElementSlowly = (
+    element,
+    duration = 2000,
+    offset = 150 // ⬅️ adjust this to reduce scroll
+  ) => {
+    const start = window.pageYOffset
+    const elementTop = element.getBoundingClientRect().top + start
+    const end = elementTop - offset // ⬅️ stop before form starts
+    const distance = end - start
+    let startTime = null
+
+    const easeInOut = (t) =>
+      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+
+    const animation = (currentTime) => {
+      if (!startTime) startTime = currentTime
+      const timeElapsed = currentTime - startTime
+      const progress = Math.min(timeElapsed / duration, 1)
+
+      window.scrollTo(0, start + distance * easeInOut(progress))
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation)
+      }
+    }
+
+    requestAnimationFrame(animation)
+  }
+
+  const timer = setTimeout(() => {
+    if (formRef.current) {
+      scrollToElementSlowly(formRef.current, 3000, 120) // ⬅️ tweak 100–200
+    }
+  }, 2000)
+
+  return () => clearTimeout(timer)
+}, [])
+
+  
+
   return (
     <div className="py-12 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
@@ -217,7 +261,7 @@ const Volunteers = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name *
