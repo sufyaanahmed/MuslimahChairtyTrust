@@ -250,6 +250,7 @@ function doPost(e) {
 
 /**
  * Get all cases from the Cases sheet
+ * Dynamically calculates amount_raised from Donations sheet
  */
 function getCases() {
   try {
@@ -288,7 +289,7 @@ function getCases() {
     const titleIndex = headers.indexOf('title');
     const descriptionIndex = headers.indexOf('description');
     const requiredAmountIndex = headers.indexOf('required_amount');
-    const amountRaisedIndex = headers.indexOf('amount_raised');
+    const amountRaisedIndex = headers.indexOf('amount_raised'); // This will be base amount
     const urlIndex = headers.indexOf('url'); // Optional image URL field
     
     // Check if required columns exist
@@ -298,6 +299,31 @@ function getCases() {
         foundHeaders: headers,
         expectedHeaders: ['case_id', 'title', 'description', 'required_amount', 'amount_raised', 'url']
       }, 500);
+    }
+    
+    // Get all donations to calculate total raised amount per case
+    const donationsSheet = ss.getSheetByName(SHEET_NAMES.DONATIONS);
+    const donationsByCase = {};
+    
+    if (donationsSheet) {
+      const donationsData = donationsSheet.getDataRange().getValues();
+      if (donationsData.length > 1) {
+        const donationHeaders = donationsData[0];
+        const donationsCaseIdIndex = donationHeaders.indexOf('case_id');
+        const donationsAmountIndex = donationHeaders.indexOf('amount');
+        
+        // Calculate total donations per case
+        for (let i = 1; i < donationsData.length; i++) {
+          const row = donationsData[i];
+          const caseId = String(row[donationsCaseIdIndex]);
+          const amount = parseFloat(row[donationsAmountIndex]) || 0;
+          
+          if (!donationsByCase[caseId]) {
+            donationsByCase[caseId] = 0;
+          }
+          donationsByCase[caseId] += amount;
+        }
+      }
     }
     
     const cases = [];
@@ -310,12 +336,23 @@ function getCases() {
         continue;
       }
       
+      // Get base amount (if any was there before the system)
+      const baseAmount = amountRaisedIndex !== -1 && row[amountRaisedIndex] 
+        ? parseFloat(row[amountRaisedIndex]) || 0 
+        : 0;
+      
+      // Get donations total from Donations sheet
+      const donationsTotal = donationsByCase[String(caseId)] || 0;
+      
+      // Calculate total raised = base + donations
+      const totalRaised = baseAmount + donationsTotal;
+      
       const caseObj = {
         case_id: String(caseId),
         title: row[titleIndex] ? String(row[titleIndex]) : '',
         description: row[descriptionIndex] ? String(row[descriptionIndex]) : '',
         required_amount: row[requiredAmountIndex] ? parseFloat(row[requiredAmountIndex]) || 0 : 0,
-        amount_raised: row[amountRaisedIndex] ? parseFloat(row[amountRaisedIndex]) || 0 : 0,
+        amount_raised: totalRaised, // Dynamically calculated
         url: urlIndex !== -1 && row[urlIndex] ? String(row[urlIndex]) : null // Optional image URL
       };
       cases.push(caseObj);
@@ -562,7 +599,7 @@ function verifyPayment(postData) {
   // Signature verified - update sheets
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   
-  // Add donation record
+  // Add donation record to Donations sheet
   const donationsSheet = ss.getSheetByName(SHEET_NAMES.DONATIONS);
   const donationRow = [
     'donation_' + Date.now(), // donation_id
@@ -574,21 +611,8 @@ function verifyPayment(postData) {
   ];
   donationsSheet.appendRow(donationRow);
   
-  // Update case amount_raised
-  const casesSheet = ss.getSheetByName(SHEET_NAMES.CASES);
-  const casesData = casesSheet.getDataRange().getValues();
-  const headers = casesData[0];
-  const caseIdIndex = headers.indexOf('case_id');
-  const amountRaisedIndex = headers.indexOf('amount_raised');
-  
-  for (let i = 1; i < casesData.length; i++) {
-    if (casesData[i][caseIdIndex] === caseId) {
-      const currentAmount = parseFloat(casesData[i][amountRaisedIndex]) || 0;
-      const newAmount = currentAmount + amount;
-      casesSheet.getRange(i + 1, amountRaisedIndex + 1).setValue(newAmount);
-      break;
-    }
-  }
+  // No need to manually update Cases sheet amount_raised
+  // It will be calculated dynamically from Donations sheet when getCases() is called
   
   return createResponse({
     success: true,

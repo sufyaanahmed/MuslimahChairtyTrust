@@ -9,6 +9,7 @@ const Cases = () => {
   const [donorName, setDonorName] = useState('')
   const [donationAmount, setDonationAmount] = useState('')
   const [showModal, setShowModal] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const casesRef = useRef(null)
 
   // Auto-scroll removed as per user request
@@ -37,8 +38,12 @@ const Cases = () => {
     const amount = amountValue * 100 // Convert to paise
 
     try {
+      setIsProcessing(true) // Start loading
+      
       // Create order via backend
       const orderData = await createRazorpayOrder(donatingCase.case_id, amount)
+      
+      setIsProcessing(false) // Stop loading before opening Razorpay
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'YOUR_RAZORPAY_KEY_ID',
@@ -60,15 +65,20 @@ const Cases = () => {
               donorName
             )
             alert('Payment successful! Thank you for your donation.')
+            
+            // Reload cases to show updated amounts
+            await refreshCases()
+            
+            // Close modal and reset form after refresh
             setShowModal(false)
             setDonorName('')
             setDonationAmount('')
             setDonatingCase(null)
-            // Reload cases to show updated amounts
-            refreshCases()
+            setIsProcessing(false)
           } catch (error) {
             console.error('Payment verification failed:', error)
             alert('Payment verification failed. Please contact support.')
+            setIsProcessing(false)
           }
         },
         prefill: {
@@ -114,6 +124,7 @@ const Cases = () => {
         },
         modal: {
           ondismiss: function() {
+            setIsProcessing(false) // Reset loading if user closes Razorpay modal
             console.log('Payment modal closed by user')
           }
         },
@@ -127,11 +138,13 @@ const Cases = () => {
       razorpay.on('payment.failed', function (response) {
         alert('Payment failed. Please try again.')
         console.error('Payment failed:', response)
+        setIsProcessing(false)
       })
       razorpay.open()
     } catch (error) {
       console.error('Error initiating payment:', error)
       alert('Failed to initiate payment. Please try again.')
+      setIsProcessing(false)
     }
   }
 
@@ -227,9 +240,20 @@ const Cases = () => {
                 <div className="flex space-x-4 pt-4">
                   <button
                     onClick={handlePayment}
-                    className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors"
+                    disabled={isProcessing}
+                    className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
                   >
-                    Proceed to Pay
+                    {isProcessing ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </>
+                    ) : (
+                      'Proceed to Pay'
+                    )}
                   </button>
                   <button
                     onClick={() => {
@@ -237,8 +261,10 @@ const Cases = () => {
                       setDonorName('')
                       setDonationAmount('')
                       setDonatingCase(null)
+                      setIsProcessing(false)
                     }}
-                    className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md font-semibold hover:bg-gray-300 transition-colors"
+                    disabled={isProcessing}
+                    className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>
