@@ -23,12 +23,81 @@ const SHEET_NAMES = {
   BLOGS: 'blogs', // New sheet for blog posts
 };
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 60000; // 1 minute in milliseconds
+const MAX_REQUESTS_PER_WINDOW = 100; // Maximum requests per window
+const rateLimitCache = CacheService.getScriptCache();
+
+/**
+ * Rate limiting function
+ * Prevents abuse by limiting requests per IP/user
+ */
+function checkRateLimit(identifier) {
+  const cacheKey = 'ratelimit_' + identifier;
+  const requestCount = parseInt(rateLimitCache.get(cacheKey) || '0');
+  
+  if (requestCount >= MAX_REQUESTS_PER_WINDOW) {
+    return {
+      allowed: false,
+      message: 'Rate limit exceeded. Please try again later.',
+      retryAfter: 60 // seconds
+    };
+  }
+  
+  // Increment counter
+  rateLimitCache.put(cacheKey, (requestCount + 1).toString(), 60); // 60 seconds TTL
+  
+  return {
+    allowed: true,
+    remaining: MAX_REQUESTS_PER_WINDOW - requestCount - 1
+  };
+}
+
+/**
+ * Sanitize input to prevent injection attacks
+ */
+function sanitizeInput(input) {
+  if (typeof input !== 'string') {
+    return input;
+  }
+  // Remove potentially dangerous characters
+  return input.replace(/[<>\"']/g, '').trim();
+}
+
+/**
+ * Validate email format
+ */
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Validate phone number format
+ */
+function isValidPhone(phone) {
+  // Allow formats: +919876543210, 9876543210, etc.
+  const phoneRegex = /^\+?[1-9]\d{9,14}$/;
+  return phoneRegex.test(phone.replace(/[\s\-()]/g, ''));
+}
+
 /**
  * Main GET handler
  * Also handles OPTIONS preflight requests for CORS
  */
 function doGet(e) {
   try {
+    // Rate limiting check
+    const clientIp = e && e.parameter && e.parameter.userIp ? e.parameter.userIp : 'unknown';
+    const rateLimitCheck = checkRateLimit(clientIp);
+    
+    if (!rateLimitCheck.allowed) {
+      return createResponse({ 
+        error: rateLimitCheck.message,
+        retryAfter: rateLimitCheck.retryAfter 
+      }, 429);
+    }
+    
     // Handle OPTIONS preflight (browsers send this for CORS)
     // Google Apps Script doesn't have a separate doOptions, so we handle it in doGet
     if (e && e.parameter && e.parameter.method === 'OPTIONS') {
@@ -89,6 +158,17 @@ function doGet(e) {
  */
 function doPost(e) {
   try {
+    // Rate limiting check
+    const clientIp = e && e.parameter && e.parameter.userIp ? e.parameter.userIp : 'unknown';
+    const rateLimitCheck = checkRateLimit(clientIp);
+    
+    if (!rateLimitCheck.allowed) {
+      return createResponse({ 
+        error: rateLimitCheck.message,
+        retryAfter: rateLimitCheck.retryAfter 
+      }, 429);
+    }
+    
     // Handle preflight OPTIONS (no postData)
     if (!e || !e.postData) {
       return createResponse({ ok: true });
@@ -521,10 +601,40 @@ function verifyPayment(postData) {
  */
 function submitVolunteerApplication(postData) {
   try {
+    // Sanitize inputs
+    const fullName = sanitizeInput(postData.full_name);
+    const email = sanitizeInput(postData.email);
+    const phoneNumber = sanitizeInput(postData.phone_number);
+    const age = sanitizeInput(postData.age);
+    const gender = sanitizeInput(postData.gender);
+    const bloodGroup = sanitizeInput(postData.blood_group);
+    const address = sanitizeInput(postData.address);
+    
     // Validate required fields
-    if (!postData.full_name || !postData.email || !postData.phone_number) {
+    if (!fullName || !email || !phoneNumber) {
       return createResponse({ 
         error: 'Missing required fields: full_name, email, and phone_number are required' 
+      }, 400);
+    }
+    
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return createResponse({ 
+        error: 'Invalid email format' 
+      }, 400);
+    }
+    
+    // Validate phone number format
+    if (!isValidPhone(phoneNumber)) {
+      return createResponse({ 
+        error: 'Invalid phone number format. Use format: +919876543210 or 9876543210' 
+      }, 400);
+    }
+    
+    // Validate age if provided
+    if (age && (isNaN(age) || parseInt(age) < 10 || parseInt(age) > 100)) {
+      return createResponse({ 
+        error: 'Invalid age. Age must be between 10 and 100' 
       }, 400);
     }
     
@@ -565,25 +675,28 @@ function submitVolunteerApplication(postData) {
     // Convert interested_areas array to string if it's an array
     let interestedAreasValue = postData.interested_areas || '';
     if (Array.isArray(interestedAreasValue)) {
-      interestedAreasValue = interestedAreasValue.join(', ');
+      // Sanitize each area
+      interestedAreasValue = interestedAreasValue.map(area => sanitizeInput(area)).join(', ');
+    } else {
+      interestedAreasValue = sanitizeInput(interestedAreasValue);
     }
     
     // Prepare row data matching header order
     // Fix phone_number: Prefix with apostrophe to prevent Google Sheets from treating it as a formula
-    let phoneNumber = postData.phone_number || '';
-    if (phoneNumber && phoneNumber.startsWith('+')) {
-      phoneNumber = "'" + phoneNumber; // Prefix with apostrophe to make it text
+    let phoneNumberFormatted = phoneNumber;
+    if (phoneNumberFormatted && phoneNumberFormatted.startsWith('+')) {
+      phoneNumberFormatted = "'" + phoneNumberFormatted; // Prefix with apostrophe to make it text
     }
     
     const rowData = [
-      postData.full_name || '',
-      phoneNumber, // Phone number with apostrophe prefix if starts with +
-      postData.email || '',
-      postData.age || '',
-      postData.gender || '',
+      fullName,
+      phoneNumberFormatted, // Phone number with apostrophe prefix if starts with +
+      email,
+      age,
+      gender,
       interestedAreasValue,
-      postData.blood_group || '',
-      postData.address || ''
+      bloodGroup,
+      address
     ];
     
     // Append row
@@ -600,8 +713,8 @@ function submitVolunteerApplication(postData) {
       success: true,
       message: 'Volunteer application submitted successfully',
       data: {
-        full_name: postData.full_name,
-        email: postData.email
+        full_name: fullName,
+        email: email
       }
     });
   } catch (error) {
@@ -617,6 +730,47 @@ function submitVolunteerApplication(postData) {
  */
 function submitContactForm(postData) {
   try {
+    // Sanitize inputs
+    const name = sanitizeInput(postData.name);
+    const email = sanitizeInput(postData.email);
+    const phone = sanitizeInput(postData.phone);
+    const subject = sanitizeInput(postData.subject);
+    const message = sanitizeInput(postData.message);
+    
+    // Validate required fields
+    if (!name || !email || !message) {
+      return createResponse({ 
+        error: 'Missing required fields: name, email, and message are required' 
+      }, 400);
+    }
+    
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return createResponse({ 
+        error: 'Invalid email format' 
+      }, 400);
+    }
+    
+    // Validate phone if provided
+    if (phone && !isValidPhone(phone)) {
+      return createResponse({ 
+        error: 'Invalid phone number format. Use format: +919876543210 or 9876543210' 
+      }, 400);
+    }
+    
+    // Validate message length
+    if (message.length < 10) {
+      return createResponse({ 
+        error: 'Message must be at least 10 characters long' 
+      }, 400);
+    }
+    
+    if (message.length > 5000) {
+      return createResponse({ 
+        error: 'Message must be less than 5000 characters' 
+      }, 400);
+    }
+    
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     const sheet = ss.getSheetByName(SHEET_NAMES.CONTACTS);
     
@@ -637,19 +791,19 @@ function submitContactForm(postData) {
     }
     
     // Fix phone: Prefix with apostrophe to prevent Google Sheets from treating it as a formula
-    let phoneNumber = postData.phone || '';
-    if (phoneNumber && phoneNumber.startsWith('+')) {
-      phoneNumber = "'" + phoneNumber; // Prefix with apostrophe to make it text
+    let phoneFormatted = phone;
+    if (phoneFormatted && phoneFormatted.startsWith('+')) {
+      phoneFormatted = "'" + phoneFormatted; // Prefix with apostrophe to make it text
     }
     
     // Prepare row data matching header order
     const rowData = [
       new Date(), // timestamp
-      postData.name || '',
-      postData.email || '',
-      phoneNumber, // Phone number with apostrophe prefix if starts with +
-      postData.subject || '',
-      postData.message || ''
+      name,
+      email,
+      phoneFormatted, // Phone number with apostrophe prefix if starts with +
+      subject,
+      message
     ];
     
     // Append row

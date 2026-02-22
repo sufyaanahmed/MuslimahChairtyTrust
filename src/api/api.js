@@ -153,17 +153,27 @@ export const fetchBlogs = async (useCache = true) => {
 
 export const createRazorpayOrder = async (caseId, amount) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?type=createOrder`, {
+    // Use URLSearchParams to avoid CORS preflight (no OPTIONS request)
+    const formData = new URLSearchParams()
+    formData.append('type', 'createOrder')
+    formData.append('data', JSON.stringify({
+      case_id: caseId,
+      amount: amount,
+    }))
+    
+    const response = await fetch(API_BASE_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify({
-        case_id: caseId,
-        amount: amount,
-      }),
+      body: formData.toString(),
     })
-    if (!response.ok) throw new Error('Failed to create order')
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to create order' }))
+      throw new Error(errorData.error || 'Failed to create order')
+    }
+    
     const data = await response.json()
     return data
   } catch (error) {
@@ -174,21 +184,31 @@ export const createRazorpayOrder = async (caseId, amount) => {
 
 export const verifyPayment = async (razorpayOrderId, razorpayPaymentId, razorpaySignature, caseId, amount, donorName) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?type=verifyPayment`, {
+    // Use URLSearchParams to avoid CORS preflight
+    const formData = new URLSearchParams()
+    formData.append('type', 'verifyPayment')
+    formData.append('data', JSON.stringify({
+      razorpay_order_id: razorpayOrderId,
+      razorpay_payment_id: razorpayPaymentId,
+      razorpay_signature: razorpaySignature,
+      case_id: caseId,
+      amount: amount,
+      donor_name: donorName,
+    }))
+    
+    const response = await fetch(API_BASE_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify({
-        razorpay_order_id: razorpayOrderId,
-        razorpay_payment_id: razorpayPaymentId,
-        razorpay_signature: razorpaySignature,
-        case_id: caseId,
-        amount: amount,
-        donor_name: donorName,
-      }),
+      body: formData.toString(),
     })
-    if (!response.ok) throw new Error('Payment verification failed')
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Payment verification failed' }))
+      throw new Error(errorData.error || 'Payment verification failed')
+    }
+    
     const data = await response.json()
     return data
   } catch (error) {

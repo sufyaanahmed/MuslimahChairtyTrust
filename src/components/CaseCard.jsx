@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ProgressBar from './ProgressBar'
+import AnimatedCounter from './ui/AnimatedCounter'
 
 const CaseCard = ({ caseData, onDonate }) => {
   const [donationAmount, setDonationAmount] = useState('')
@@ -67,11 +68,19 @@ const CaseCard = ({ caseData, onDonate }) => {
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>Progress</span>
-            <span className="font-semibold">{Math.round(progress)}%</span>
+            <span className="font-semibold">
+              <AnimatedCounter value={progress} isPercentage={true} duration={1500} />
+            </span>
           </div>
           <ProgressBar progress={progress} />
           <div className="flex justify-between text-sm text-gray-500 mt-2">
-            <span>₹{caseData.amount_raised?.toLocaleString('en-IN') || 0} raised</span>
+            <span>
+              <AnimatedCounter 
+                value={caseData.amount_raised || 0} 
+                isCurrency={true} 
+                duration={1500} 
+              /> raised
+            </span>
             <span>of ₹{caseData.required_amount?.toLocaleString('en-IN') || 0}</span>
           </div>
         </div>

@@ -11,45 +11,7 @@ const Cases = () => {
   const [showModal, setShowModal] = useState(false)
   const casesRef = useRef(null)
 
-  // Auto-scroll to cases after 2 seconds
-  useEffect(() => {
-    const scrollToElementSlowly = (
-      element,
-      duration = 2000,
-      offset = 150 // ⬅️ space before cases
-    ) => {
-      const start = window.pageYOffset
-      const elementTop = element.getBoundingClientRect().top + start
-      const end = elementTop - offset // ⬅️ stop early
-      const distance = end - start
-      let startTime = null
-  
-      const easeInOut = (t) =>
-        t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
-  
-      const animation = (currentTime) => {
-        if (!startTime) startTime = currentTime
-        const timeElapsed = currentTime - startTime
-        const progress = Math.min(timeElapsed / duration, 1)
-  
-        window.scrollTo(0, start + distance * easeInOut(progress))
-  
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation)
-        }
-      }
-  
-      requestAnimationFrame(animation)
-    }
-  
-    const timer = setTimeout(() => {
-      if (casesRef.current && cases.length > 0) {
-        scrollToElementSlowly(casesRef.current, 3000, 120) // ⬅️ adjust 100–200
-      }
-    }, 2000)
-  
-    return () => clearTimeout(timer)
-  }, [cases.length])
+  // Auto-scroll removed as per user request
   
   
 
@@ -84,6 +46,7 @@ const Cases = () => {
         currency: 'INR',
         name: 'Muslimah Charity Trust',
         description: `Donation for ${donatingCase.title}`,
+        image: '/Logo.jpeg', // Your charity logo
         order_id: orderData.order_id,
         handler: async function (response) {
           try {
@@ -110,10 +73,53 @@ const Cases = () => {
         },
         prefill: {
           name: donorName,
-          contact: '+919844507137', // Razorpay contact number
+          contact: '+919844507137', // Default contact number
+        },
+        // UPI and payment method configuration
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true, // Enable UPI payments
+          wallet: true,
+        },
+        config: {
+          display: {
+            blocks: {
+              banks: {
+                name: 'All payment methods',
+                instruments: [
+                  {
+                    method: 'upi'
+                  },
+                  {
+                    method: 'card'
+                  },
+                  {
+                    method: 'netbanking'
+                  },
+                  {
+                    method: 'wallet'
+                  }
+                ],
+              },
+            },
+            sequence: ['block.banks'],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
         },
         theme: {
           color: '#22c55e',
+        },
+        modal: {
+          ondismiss: function() {
+            console.log('Payment modal closed by user')
+          }
+        },
+        notes: {
+          case_id: donatingCase.case_id,
+          case_title: donatingCase.title,
         },
       }
 

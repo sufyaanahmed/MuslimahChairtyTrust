@@ -4,12 +4,12 @@ import { useData } from '../context/DataContext'
 import CaseCard from '../components/CaseCard'
 import MediaGrid from '../components/MediaGrid'
 import NumberFlowComponent from '../components/ui/NumberFlow'
-import { fetchStats } from '../api/api'
+import { fetchStats, createRazorpayOrder, verifyPayment } from '../api/api'
 import { QuranHero } from '../components/ui/QuranHero'
 import { BorderTrail } from '../components/ui/BorderTrail'
 
 const Home = () => {
-  const { cases, media, loading } = useData()
+  const { cases, media, loading, refreshCases } = useData()
   const location = useLocation()
   const [isLoaded, setIsLoaded] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -21,6 +21,12 @@ const Home = () => {
   })
   const [statsLoading, setStatsLoading] = useState(true)
   const highlightTimeoutRef = useRef(null)
+  
+  // Payment modal states
+  const [donatingCase, setDonatingCase] = useState(null)
+  const [donorName, setDonorName] = useState('')
+  const [donationAmount, setDonationAmount] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   // Get featured items (first 3)
   const featuredCases = useMemo(() => cases.slice(0, 3), [cases])
@@ -77,8 +83,116 @@ const Home = () => {
     }
   }, [featuredCases])
 
-  const handleDonate = (caseData) => {
-    window.location.href = `/cases#case-${caseData.case_id}`
+  const handleDonate = (caseData, preSelectedAmount = 0) => {
+    setDonatingCase(caseData)
+    setDonationAmount(preSelectedAmount > 0 ? preSelectedAmount.toString() : '')
+    setShowModal(true)
+  }
+
+  const handlePayment = async () => {
+    if (!donorName || !donatingCase) {
+      alert('Please enter your name')
+      return
+    }
+
+    // Ensure minimum amount is 100
+    const amountValue = parseFloat(donationAmount) || 0
+    if (amountValue < 100) {
+      alert('Minimum donation amount is ₹100')
+      return
+    }
+
+    const amount = amountValue * 100 // Convert to paise
+
+    try {
+      // Create order via backend
+      const orderData = await createRazorpayOrder(donatingCase.case_id, amount)
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'YOUR_RAZORPAY_KEY_ID',
+        amount: amount,
+        currency: 'INR',
+        name: 'Muslimah Charity Trust',
+        description: `Donation for ${donatingCase.title}`,
+        image: '/Logo.jpeg',
+        order_id: orderData.order_id,
+        handler: async function (response) {
+          try {
+            // Verify payment via backend
+            await verifyPayment(
+              response.razorpay_order_id,
+              response.razorpay_payment_id,
+              response.razorpay_signature,
+              donatingCase.case_id,
+              amount / 100,
+              donorName
+            )
+            alert('Payment successful! Thank you for your donation.')
+            setShowModal(false)
+            setDonorName('')
+            setDonationAmount('')
+            setDonatingCase(null)
+            // Reload cases to show updated amounts
+            refreshCases()
+          } catch (error) {
+            console.error('Payment verification failed:', error)
+            alert('Payment verification failed. Please contact support.')
+          }
+        },
+        prefill: {
+          name: donorName,
+          contact: '+919844507137',
+        },
+        // UPI and payment method configuration
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true,
+          wallet: true,
+        },
+        config: {
+          display: {
+            blocks: {
+              banks: {
+                name: 'All payment methods',
+                instruments: [
+                  { method: 'upi' },
+                  { method: 'card' },
+                  { method: 'netbanking' },
+                  { method: 'wallet' }
+                ],
+              },
+            },
+            sequence: ['block.banks'],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
+        },
+        theme: {
+          color: '#22c55e',
+        },
+        modal: {
+          ondismiss: function() {
+            console.log('Payment modal closed by user')
+          }
+        },
+        notes: {
+          case_id: donatingCase.case_id,
+          case_title: donatingCase.title,
+        },
+      }
+
+      const razorpay = new window.Razorpay(options)
+      razorpay.on('payment.failed', function (response) {
+        alert('Payment failed. Please try again.')
+        console.error('Payment failed:', response)
+      })
+      razorpay.open()
+    } catch (error) {
+      console.error('Error initiating payment:', error)
+      alert('Failed to initiate payment. Please try again.')
+    }
   }
 
   return (
@@ -369,6 +483,65 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Payment Modal */}
+      {showModal && donatingCase && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">
+              Donate to {donatingCase.title}
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  value={donorName}
+                  onChange={(e) => setDonorName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Enter your name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Donation Amount (\u20b9) *
+                </label>
+                <input
+                  type="number"
+                  value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Enter amount (minimum \u20b9100)"
+                  min="100"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">Minimum amount: \u20b9100</p>
+              </div>
+              <div className="flex space-x-4 pt-4">
+                <button
+                  onClick={handlePayment}
+                  className="flex-1 bg-primary text-white py-2 px-4 rounded-md font-semibold hover:bg-primary/80 transition-colors"
+                >
+                  Proceed to Pay
+                </button>
+                <button
+                  onClick={() => {
+                    setShowModal(false)
+                    setDonorName('')
+                    setDonationAmount('')
+                    setDonatingCase(null)
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

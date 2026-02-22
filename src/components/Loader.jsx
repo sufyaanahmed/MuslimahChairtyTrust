@@ -1,6 +1,23 @@
 import { useEffect, useState } from 'react'
 import { useData } from '../context/DataContext'
 
+// Preload critical images immediately - before component even mounts
+const preloadCriticalImages = () => {
+  // Preload hero images
+  const heroImg1 = new Image()
+  heroImg1.src = '/Hero_image_1.jpg'
+  
+  const heroImg2 = new Image()
+  heroImg2.src = '/Hero_image_2.jpg'
+
+  // Preload logo
+  const logoImg = new Image()
+  logoImg.src = '/Logo.jpeg'
+}
+
+// Start preloading as soon as this module loads
+preloadCriticalImages()
+
 const Loader = ({ onComplete }) => {
   const [progress, setProgress] = useState(0)
   const { casesLoading, mediaLoading, statsLoading } = useData()
@@ -19,27 +36,15 @@ const Loader = ({ onComplete }) => {
 
     // When everything is loaded, wait a bit then hide loader
     if (!casesLoading && !mediaLoading && !statsLoading) {
-      // Preload images
-      preloadImages()
-      
-      // Wait a minimum of 1.5 seconds for smooth UX
+      // Images should already be preloaded at this point
+      // Wait a minimum of 1 second for smooth UX
       const timer = setTimeout(() => {
         if (onComplete) onComplete()
-      }, 1500)
+      }, 1000)
 
       return () => clearTimeout(timer)
     }
   }, [casesLoading, mediaLoading, statsLoading, onComplete])
-
-  const preloadImages = () => {
-    // Preload hero image
-    const heroImg = new Image()
-    heroImg.src = '/hero_image2.jpg'
-
-    // Preload logo
-    const logoImg = new Image()
-    logoImg.src = '/Logo.jpeg'
-  }
 
   return (
     <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
@@ -61,6 +66,15 @@ const Loader = ({ onComplete }) => {
             Muslimah Charity Trust
           </h2>
           <p className="text-primary">Loading...</p>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-primary transition-all duration-300 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-sm text-gray-600 mt-2">{Math.round(progress)}%</p>
         </div>
       </div>
     </div>
@@ -68,4 +82,3 @@ const Loader = ({ onComplete }) => {
 }
 
 export default Loader
-

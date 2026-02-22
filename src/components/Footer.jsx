@@ -10,7 +10,7 @@ const Footer = () => {
               Muslimah Charity Trust
             </h3>
             <p className="text-gray-400">
-              Empowering communities through compassion and care.
+              Empowering communities through compassion and care.❤️
             </p>
           </div>
 
