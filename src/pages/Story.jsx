@@ -7,7 +7,7 @@ const Story = () => {
       content: (
         <div>
           <p className="text-gray-800 text-xs md:text-sm font-normal mb-4">
-            <strong>Muslimah Charity Trust</strong> was established in 2024 by <strong>Umme Romana</strong>, 
+            <strong>Muslimah Charity Trust</strong> was established in 2024 by <strong>Umme Rooman AK</strong>, 
             with our head office located in <strong>RT Nagar, Bangalore</strong>.
           </p>
           <p className="text-gray-800 text-xs md:text-sm font-normal mb-8">
