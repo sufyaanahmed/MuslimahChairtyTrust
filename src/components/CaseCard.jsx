@@ -4,11 +4,15 @@ import AnimatedCounter from './ui/AnimatedCounter'
 
 const CaseCard = ({ caseData, onDonate }) => {
   const [donationAmount, setDonationAmount] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
   const progress = caseData.required_amount > 0 
     ? (caseData.amount_raised / caseData.required_amount) * 100 
     : 0
 
   const quickAmounts = [50, 100, 200, 500]
+  
+  // Check if description is long enough to need Read More (more than ~150 characters)
+  const needsReadMore = caseData.description && caseData.description.length > 150
 
   const handleQuickAmountClick = (amount) => {
     const currentAmount = parseFloat(donationAmount) || 0
@@ -61,9 +65,33 @@ const CaseCard = ({ caseData, onDonate }) => {
         <h3 className="text-xl font-bold text-gray-900 mb-2">
           {caseData.title}
         </h3>
-        <p className="text-gray-600 mb-4 line-clamp-3">
-          {caseData.description}
-        </p>
+        <div className="mb-4">
+          <p className={`text-gray-600 ${!isExpanded && needsReadMore ? 'line-clamp-3' : ''}`}>
+            {caseData.description}
+          </p>
+          {needsReadMore && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-primary hover:text-primary/80 text-sm font-medium mt-2 flex items-center gap-1 transition-colors"
+            >
+              {isExpanded ? (
+                <>
+                  Read Less
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Read More
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </>
+              )}
+            </button>
+          )}
+        </div>
         
         <div className="mb-4">
           <div className="flex justify-between text-sm text-gray-600 mb-2">
