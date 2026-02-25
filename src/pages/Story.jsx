@@ -221,7 +221,7 @@ const Story = () => {
           <section className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-3xl font-bold mb-4 text-primary">Our Founder</h2>
             <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              <strong>Muslimah Charity Trust</strong> was founded by <strong>Umme Romana</strong> in 2024, 
+              <strong>Muslimah Charity Trust</strong> was founded by <strong>Umme Rooman AK</strong> in 2024, 
               with our head office located in <strong>RT Nagar, Bangalore</strong>.
             </p>
             <p className="text-gray-700 leading-relaxed text-lg">
