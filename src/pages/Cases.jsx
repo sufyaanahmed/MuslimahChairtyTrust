@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useData } from '../context/DataContext'
 import { createRazorpayOrder, verifyPayment } from '../api/api'
+import { useSearchParams } from 'react-router-dom'
 import CaseCard from '../components/CaseCard'
 
 const Cases = () => {
@@ -11,6 +12,37 @@ const Cases = () => {
   const [showModal, setShowModal] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const casesRef = useRef(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Handle deep linking - auto-open payment modal if caseId is in URL
+  useEffect(() => {
+    const caseId = searchParams.get('caseId')
+    if (caseId && cases.length > 0) {
+      const targetCase = cases.find(c => c.case_id === caseId)
+      if (targetCase) {
+        // Scroll to the case
+        setTimeout(() => {
+          const element = document.getElementById(`case-${caseId}`)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            // Highlight the case briefly
+            element.classList.add('ring-4', 'ring-primary', 'ring-opacity-50')
+            setTimeout(() => {
+              element.classList.remove('ring-4', 'ring-primary', 'ring-opacity-50')
+            }, 2000)
+          }
+        }, 300)
+        
+        // Optionally auto-open donation modal
+        const autoOpen = searchParams.get('donate')
+        if (autoOpen === 'true') {
+          setTimeout(() => {
+            handleDonate(targetCase, 0)
+          }, 500)
+        }
+      }
+    }
+  }, [cases, searchParams])
 
   // Auto-scroll removed as per user request
   

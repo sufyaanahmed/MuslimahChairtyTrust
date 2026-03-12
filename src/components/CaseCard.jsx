@@ -14,6 +14,29 @@ const CaseCard = ({ caseData, onDonate }) => {
   // Check if description is long enough to need Read More (more than ~150 characters)
   const needsReadMore = caseData.description && caseData.description.length > 150
 
+  // Generate case URL for sharing and internal deep linking
+  const caseUrl = `${window.location.origin}/cases`
+  
+  // Production URL for shareable links
+  const productionUrl = `https://www.muslimahcharitytrust.org/cases`
+  
+  // Generate share text with Islamic greeting and professional format
+  const shareText = `Assalamu Alaikum!
+Muslimah Charity Trust invites you to support this cause.
+
+Case: ${caseData.title}
+${caseData.description}
+
+₹${caseData.amount_raised?.toLocaleString('en-IN')} raised of ₹${caseData.required_amount?.toLocaleString('en-IN')} (${Math.round(progress)}%)
+
+Donate now: ${productionUrl}
+
+Your small contribution can make a big difference.
+JazakAllah Khair for your support.
+
+– Muslimah Charity Trust
+https://www.muslimahcharitytrust.org/`
+
   const handleQuickAmountClick = (amount) => {
     const currentAmount = parseFloat(donationAmount) || 0
     const newAmount = currentAmount + amount
@@ -37,6 +60,36 @@ const CaseCard = ({ caseData, onDonate }) => {
       return
     }
     onDonate(caseData, finalAmount)
+  }
+
+  const handleShare = async () => {
+    try {
+      // Try Web Share API first (works on mobile)
+      if (navigator.share) {
+        await navigator.share({
+          title: caseData.title,
+          text: shareText,
+          url: productionUrl
+        })
+      } else {
+        // Fallback: Show share options
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+        const copyToClipboard = () => {
+          navigator.clipboard.writeText(shareText)
+          alert('Link copied to clipboard! You can now share it on Instagram or anywhere else.')
+        }
+        
+        // Show a simple modal with options
+        const choice = window.confirm('Share via WhatsApp? (Click Cancel to copy link instead)')
+        if (choice) {
+          window.open(whatsappUrl, '_blank')
+        } else {
+          copyToClipboard()
+        }
+      }
+    } catch (error) {
+      console.error('Error sharing:', error)
+    }
   }
 
   return (
@@ -65,6 +118,21 @@ const CaseCard = ({ caseData, onDonate }) => {
         <h3 className="text-xl font-bold text-gray-900 mb-2">
           {caseData.title}
         </h3>
+        
+        {/* Share Button */}
+        <div className="mb-3">
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            title="Share this case"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg>
+            Share
+          </button>
+        </div>
+        
         <div className="mb-4">
           <p className={`text-gray-600 ${!isExpanded && needsReadMore ? 'line-clamp-3' : ''}`}>
             {caseData.description}
